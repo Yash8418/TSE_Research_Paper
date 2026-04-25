@@ -1,0 +1,3319 @@
+repo,id,title,description,state,labels,reporter,comments_count,created_at,closed_at,label,desc_length,has_steps,has_code,bug_type,quality_score,resolution_time_days,possible_duplicate
+microsoft/vscode,4311167668,inlayHints and documentSymbols are requested twice on every key press + inlayHints are called again on every show,"While reviewing some stats, I noticed inlayHints being called way more frequently than other requests that I thought would be made approximately on every key stroke.
+
+So I opened an empty Dart file and slowly typed ""// qwerty"" (with around 2-3s between each keypress).
+
+In the LSP logs, I see that inlayHint is called twice for each change (it's the first request after the edit, and then also happens again later). The same is true for documentSymbols, but that's called twice consecutively.
+
+[duplicate_request_log.txt](https://github.com/user-attachments/files/26981707/duplicate_request_log.txt)
+
+For convenience, here are the didChange, inlayHint, and documentSymbol requests highlighted in a screenshot:
+
+<img width=""966"" height=""1290"" alt=""Image"" src=""https://github.com/user-attachments/assets/8eb5e7f9-3beb-48e3-aab4-ad63154fd656"" />
+
+In all cases, the duplicate inlayHint/documentSymbol requests appear to be the same. I think VS Code should be cache these in some way to not re-fetch data that cannot have changed. There are events like `onDidChangeInlayHints` if an extension/server does need to trigger a refresh.",open,[],DanTup,6,2026-04-22 18:48:25+00:00,,UNKNOWN,1126,False,False,Performance,50,,False
+microsoft/vscode,4310680170,Chat hangs on last couple of tokens,"
+Type: <b>Bug</b>
+
+repro: 
+
+1. turn off websockets support just in case 
+
+```
+  ""github.copilot.chat.advanced.responsesApi.webSocket.enabled"": false,
+```
+
+2. open chat, set it to gpt-5.4 (default reasoning effort) 
+3. ask something like ""how do I solve differential equations? use no reasoning"" - stream starts, last couple of tokens are not rendered for many seconds (~20s) 
+
+VS Code version: Code - Insiders 1.118.0-insider (Universal) (102df5b59f1c706f14aee2259d4ec60a6acee55c, 2026-04-22T11:25:25Z)
+OS version: Darwin arm64 25.4.0
+Modes:
+
+<details><summary>Prompt Details</summary>
+<pre>
+Info: [CopilotCLIChatSessionContentProvider] listSessions took 79.34062500018626ms
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: false.
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: true.
+Debug: [CopilotCLI] Found 33 JSONL sessions and 0 legacy sessions
+Info: [CopilotCLIChatSessionContentProvider] listSessions took 17.285333999898285ms
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: false.
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: true.
+Debug: [CopilotCLI] Found 33 JSONL sessions and 0 legacy sessions
+Info: [CopilotCLIChatSessionContentProvider] listSessions took 7.914917000103742ms
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: false.
+Trace: [GitServiceImpl][doOpenRepository] Active repository: {""_repo"":{""rootUri"":{""$mid"":1,""fsPath"":""/Users/ulugbekna/code/vscode"",""external"":""file:///Users/ulugbekna/code/vscode"",""path"":""/Users/ulugbekna/code/vscode"",""scheme"":""file""},""inputBox"":{},""kind"":""repository"",""state"":{},""ui"":{},""isUsingVirtualFileSystem"":false},""rootUri"":{""$mid"":1,""fsPath"":""/Users/ulugbekna/code/vscode"",""external"":""file:///Users/ulugbekna/code/vscode"",""path"":""/Users/ulugbekna/code/vscode"",""scheme"":""file""},""kind"":""repository"",""isUsingVirtualFileSystem"":false,""headBranchName"":""main"",""headCommitHash"":""b2ffe3f008b1924cc5de172cefc1fc5bec28d3a8"",""headIncomingChanges"":0,""headOutgoingChanges"":0,""upstreamBranchName"":""main"",""upstreamRemote"":""origin"",""isRebasing"":true,""remotes"":[""origin""],""remoteFetchUrls"":[""https://github.com/microsoft/vscode.git""],""worktrees"":[{""name"":""vscode"",""path"":""/Users/ulugbekna/code/vscode"",""ref"":""refs/heads/main"",""detached"":false,""main"":true},{""name"":""agents-autopilot-dialog-dont-show-again"",""path"":""/Users/ulugbekna/code/vscode.worktrees/agents-autopilot-dialog-dont-show-again"",""ref"":""refs/heads/ulugbekna/agents/autopilot-dialog-dont-show-again"",""detached"":false,""main"":false},{""name"":""agents-enable-disable-skills-agent-ui"",""path"":""/Users/ulugbekna/code/vscode.worktrees/agents-enable-disable-skills-agent-ui"",""ref"":""refs/heads/ulugbekna/agents/enable-disable-skills-agent-ui"",""detached"":false,""main"":false},{""name"":""copilot-close-viper"",""path"":""/Users/ulugbekna/code/vscode.worktrees/copilot-close-viper"",""ref"":""refs/heads/ulugbekna/copilot/close-viper"",""detached"":false,""main"":false}],""changes"":{""mergeChanges"":[],""indexChanges"":[],""workingTree"":[],""untrackedChanges"":[]},""_onDidChangeSignal"":{""_observers"":{},""debugName"":""Observable Signal From Event""},""headBranchNameObs"":{""_observers"":{},""_debugNameData"":{},""_state"":0,""_updateCount"":0,""_dependencies"":{},""_dependenciesToBeRemoved"":{},""_isUpdating"":false,""_isComputing"":false,""_didReportChange"":false,""_isInBeforeUpdate"":false,""_isReaderValid"":false,""_removedObserverToCallEndUpdateOn"":null},""headCommitHashObs"":{""_observers"":{},""_debugNameData"":{},""_state"":0,""_updateCount"":0,""_dependencies"":{},""_dependenciesToBeRemoved"":{},""_isUpdating"":false,""_isComputing"":false,""_didReportChange"":false,""_isInBeforeUpdate"":false,""_isReaderValid"":false,""_removedObserverToCallEndUpdateOn"":null},""upstreamBranchNameObs"":{""_observers"":{},""_debugNameData"":{},""_state"":0,""_updateCount"":0,""_dependencies"":{},""_dependenciesToBeRemoved"":{},""_isUpdating"":false,""_isComputing"":false,""_didReportChange"":false,""_isInBeforeUpdate"":false,""_isReaderValid"":false,""_removedObserverToCallEndUpdateOn"":null},""upstreamRemoteObs"":{""_observers"":{},""_debugNameData"":{},""_state"":0,""_updateCount"":0,""_dependencies"":{},""_dependenciesToBeRemoved"":{},""_isUpdating"":false,""_isComputing"":false,""_didReportChange"":false,""_isInBeforeUpdate"":false,""_isReaderValid"":false,""_removedObserverToCallEndUpdateOn"":null},""isRebasingObs"":{""_observers"":{},""_debugNameData"":{},""_state"":0,""_updateCount"":0,""_dependencies"":{},""_dependenciesToBeRemoved"":{},""_isUpdating"":false,""_isComputing"":false,""_didReportChange"":false,""_isInBeforeUpdate"":false,""_isReaderValid"":false,""_removedObserverToCallEndUpdateOn"":null},""_checkIsIgnored"":{""_waitingTimeMs"":1000,""_queue"":[],""_timeout"":null},""_isIgnored"":{""_map"":{},""_map2"":{}}}
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: true.
+Debug: [CopilotCLI] Found 33 JSONL sessions and 0 legacy sessions
+Info: [CopilotCLIChatSessionContentProvider] listSessions took 11.174499999731779ms
+Trace: RemoteEmbeddingsComputer::computeEmbeddings started
+Trace: RemoteEmbeddingsComputer::computeEmbeddings success. Elapsed 257.9326670002192
+Debug: Related Information: Remote similarly request took 258ms
+Debug: Related Information: Successfully Calculated, returning 258ms
+Trace: RemoteEmbeddingsComputer::computeEmbeddings started
+Trace: RemoteEmbeddingsComputer::computeEmbeddings success. Elapsed 168.7464589998126
+Debug: Related Information: Remote similarly request took 169ms
+Debug: Related Information: Successfully Calculated, returning 169ms
+Trace: [CopilotCLI] [DIFF] getActiveDiffByTab: tab is not a diff tab
+Trace: [CopilotCLI] [DIFF] getActiveDiffByTab: tab is not a diff tab
+Trace: [GitServiceImpl][getRepositoryFetchUrls] URI: newissue:/NewIssue.md?%7B%22origin%22%3A%22repo%3Amicrosoft%2Fvscode%3F%257B%2522folderManagerRootUri%2522%253A%2522file%253A%252F%252F%252FUsers%252Fulugbekna%252Fcode%252Fvscode%2522%257D%22%7D
+Trace: [GitServiceImpl][getRepositoryFetchUrls] No repository root found
+Trace: RemoteEmbeddingsComputer::computeEmbeddings started
+Trace: RemoteEmbeddingsComputer::computeEmbeddings success. Elapsed 247.06125000026077
+Debug: Related Information: Remote similarly request took 247ms
+Debug: Related Information: Successfully Calculated, returning 247ms
+Trace: RemoteEmbeddingsComputer::computeEmbeddings started
+Trace: RemoteEmbeddingsComputer::computeEmbeddings success. Elapsed 164.10791700007394
+Debug: Related Information: Remote similarly request took 164ms
+Debug: Related Information: Successfully Calculated, returning 164ms
+Trace: RemoteEmbeddingsComputer::computeEmbeddings started
+Trace: RemoteEmbeddingsComputer::computeEmbeddings success. Elapsed 254.6163749997504
+Debug: Related Information: Remote similarly request took 255ms
+Debug: Related Information: Successfully Calculated, returning 255ms
+Trace: RemoteEmbeddingsComputer::computeEmbeddings started
+Trace: RemoteEmbeddingsComputer::computeEmbeddings success. Elapsed 329.0872499998659
+Debug: Related Information: Remote similarly request took 330ms
+Debug: Related Information: Successfully Calculated, returning 330ms
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: false.
+Debug: [context keys] Window state change. Needs offline check: false, active: true, focused: true.
+Debug: [CopilotCLI] Found 33 JSONL sessions and 0 legacy sessions
+Info: [CopilotCLIChatSessionContentProvider] listSessions took 12.653249999973923ms
+Trace: RemoteEmbeddingsComputer::computeEmbeddings started
+Trace: RemoteEmbeddingsComputer::computeEmbeddings success. Elapsed 236.0215409998782
+Debug: Related Information: Remote similarly request took 237ms
+Debug: Related Information: Successfully Calculated, returning 237ms
+</pre>
+</details>
+<details><summary>Request IDs</summary>
+<pre>
+cbf96f2b-9c91-4de7-b158-665251d2382e
+f275a27f-85a7-47ec-919d-d7bb1d8b6122
+c0d612b8-8196-4c90-91c7-5d71c241cd19
+2095a558-ddce-4bc6-a864-a295f6284b86
+29526330-8226-4393-afe6-eba7a932e251
+97a9fbf7-f7de-45a3-a986-a4b423598afe
+08f63962-e1df-49e0-809c-79f32cd53668
+51c57eeb-5c55-4784-81c4-2d91212af1bd
+</pre>
+</details><details>
+<summary>System Info</summary>
+
+|Item|Value|
+|---|---|
+|CPUs|Apple M4 Pro (14 x 2400)|
+|GPU Status|2d_canvas: enabled<br>GPU0: VENDOR= 0x106b [Google Inc. (Apple)], DEVICE=0x0000 [ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Version 26.4.1 (Build 25E253))], DRIVER_VENDOR=Apple, DRIVER_VERSION=26.4.1 *ACTIVE*<br>Machine model name: Mac<br>Machine model version: 16.8<br>direct_rendering_display_compositor: disabled_off_ok<br>gpu_compositing: enabled<br>multiple_raster_threads: enabled_on<br>opengl: enabled_on<br>rasterization: enabled<br>raw_draw: disabled_off_ok<br>skia_graphite: enabled_on<br>trees_in_viz: disabled_off<br>video_decode: enabled<br>video_encode: enabled<br>webgl: enabled<br>webgl2: enabled<br>webgpu: enabled<br>webnn: disabled_off|
+|Load (avg)|5, 5, 6|
+|Memory (System)|48.00GB (0.16GB free)|
+|Process Argv|--log info --log github.copilot-chat=trace --log github.vscode-pull-request-github=debug --crash-reporter-id 8c80ab9c-ee3f-4087-8f5f-a4efe42eaf63|
+|Screen Reader|no|
+|VM|0%|
+</details><details><summary>Extensions (70)</summary>
+
+Extension|Author (truncated)|Version
+---|---|---
+Bookmarks|ale|14.1.1
+tsl-problem-matcher|amo|0.6.2
+markdown-mermaid|bie|1.32.0
+cerebras-chat|Cer|0.1.20
+npm-intellisense|chr|1.4.5
+esbuild-problem-matchers|con|0.0.3
+vscode-eslint|dba|3.0.24
+gitlens|eam|2026.4.220537
+EditorConfig|Edi|0.18.2
+prettier-vscode|esb|12.4.0
+codespaces|Git|1.18.13
+remotehub|Git|0.65.2026031901
+vscode-pull-request-github|Git|0.139.2026042215
+go|gol|0.52.2
+gc-excelviewer|Gra|4.2.65
+hediet-power-tools|hed|0.4.0
+vscode-drawio|hed|1.9.250226013
+lldb-dap|llv|0.4.1
+rainbow-csv|mec|3.24.1
+template-string-converter|meg|0.6.1
+vscode-azureresourcegroups|ms-|0.12.4
+vscode-containers|ms-|2.4.1
+vscode-docker|ms-|2.0.0
+debugpy|ms-|2026.3.2026032701
+python|ms-|2026.5.2026032701
+vscode-pylance|ms-|2026.2.100
+vscode-python-envs|ms-|1.29.2026041601
+jupyter|ms-|2025.10.2026042201
+jupyter-keymap|ms-|1.1.2
+jupyter-renderers|ms-|1.3.2025062701
+vscode-jupyter-cell-tags|ms-|0.1.9
+vscode-jupyter-slideshow|ms-|0.1.6
+remote-ssh|ms-|0.123.2026033115
+remote-ssh-edit|ms-|0.87.0
+remote-wsl|ms-|0.104.3
+azure-repos|ms-|0.41.2026031901
+cpptools|ms-|1.31.5
+hexeditor|ms-|1.11.1
+kusto-client|ms-|0.3.2026041703
+remote-explorer|ms-|0.6.2026031809
+remote-repositories|ms-|0.43.2026031901
+remote-server|ms-|1.6.2026041509
+test-adapter-converter|ms-|0.2.1
+ts-file-path-support|ms-|1.0.0
+vscode-diagnostic-tools|ms-|1.2.0
+vscode-github-issue-notebooks|ms-|0.0.134
+vscode-js-profile-flame|ms-|1.0.9
+vscode-speech|ms-|0.16.0
+wasm-dwarf-debugging|ms-|1.0.1
+web-editors|ms-|0.3.0
+ocaml-platform|oca|2.0.1
+chatgpt|ope|26.5417.40842
+refactor|p42|3.0.1
+material-product-icons|PKi|1.7.1
+excalidraw-editor|pom|3.9.1
+deoptexplorer-vscode|rbu|1.1.2
+toggle|reb|0.0.2
+vscode-xml|red|0.29.2025112508
+vscode-yaml|red|1.22.0
+LiveServer|rit|5.7.10
+svg-preview|Sim|2.8.3
+graphviz-interactive-preview|tin|0.3.5
+tldraw-vscode|tld|2.247.0
+ulugbek-s-power-tools|ulu|0.0.2
+errorlens|use|3.28.0
+explorer|vit|1.50.2
+vim|vsc|1.32.4
+vscode-alternate-file|wil|0.3.1
+pretty-ts-errors|Yoa|0.8.7
+vscode-selfhost-test-provider|ms-|0.4.0
+
+
+</details><details>
+<summary>A/B Experiments</summary>
+
+```
+vsliv368cf:30146710
+pythonvspyt551:31249597
+nativeloc1:31118317
+dwcopilot:31158714
+471b6256:31240254
+dwoutputs:31242946
+copilot_t_ci:31333650
+g012b348:31231168
+pythonrdcb7:31268811
+pythonpcpt1:31399616
+6518g693:31302842
+6abeh943:31336334
+envsactivate1:31349248
+editstats-enabled:31346256
+cloudbuttont:31366566
+3efgi100_wstrepl:31403338
+55ia6109:31457054
+use-responses-api:31390341
+je187915:31401257
+cp_cls_t_966_ss:31454198
+inlinechat_v2_hd992725:31445440
+c0683394:31481635
+8hhj4413:31478653
+ge8j1254_inline_auto_hint_haiku:31490507
+38bie571_auto:31487346
+cp_cls_c_1081:31454833
+conptydll_true:31485575
+ia-use-proxy-models-svc:31446143
+e9c30283:31453065
+test_treatment2:31471001
+46204921:31447328
+idci7584:31454084
+nes_chat_context_disabled:31451402
+e3e4d672:31454087
+ei9d7968:31462942
+534a6447:31478742
+hg17d649:31455236
+nes-extended-on:31455475
+nes-vscode-team-custom:31472622
+vscode-team-custom-2:31480564
+jc933416:31462667
+89g7j272:31480197
+7e884298:31462391
+4f032803_compaction:31499499
+7e187181:31482583
+cpptoolsoff-v2:31475362
+i2gc6536:31472020
+1g3cj959:31494704
+h08i8180_copy:31475366
+23c7c724:31491644
+client_tst_t:31486874
+po_split_t:31488387
+ddid_t:31478204
+getcmakediagnosticsoff:31489825
+ja75b849:31492254
+bjc72774_agent_sandbox:31488286
+7df3h592:31491241
+pro_large_t:31499377
+606h2495_c:31485219
+cp_cls_c_1082:31491634
+719di409_sum_t:31499469
+0he74425_c:31494278
+nes-cj-aftline:31490296
+cc5hd740:31492954
+logging_enabled_new:31490725
+nes-ew-div-cursorline:31494905
+
+```
+
+</details>
+
+<!-- generated by issue reporter -->",open,[],ulugbekna,6,2026-04-22 17:16:54+00:00,,UNKNOWN,12916,False,True,Crash,65,,False
+microsoft/vscode,4310170244,Obnoxious window header Update button can not be disabled,"
+Type: <b>Bug</b>
+
+The Obnoxious bright blue !UPDATE! button screaming at me in the window title bar can not be disabled. It's so visually agressive it forces me to stop what I am doing, close the attached debugging session, update, and restart the debugged application.
+
+Just let me update when I want to, don't let this be Windows Update type extortion.
+
+I have to have automatic updates disabled just to be able to work uninterrupted.
+
+VS Code version: Code 1.116.0 (560a9dba96f961efea7b1612916f89e5d5d4d679, 2026-04-15T00:28:13Z)
+OS version: Windows_NT x64 10.0.26200
+Modes:
+
+<details>
+<summary>System Info</summary>
+
+|Item|Value|
+|---|---|
+|CPUs|AMD Ryzen 9 3900X 12-Core Processor             (24 x 3800)|
+|GPU Status|2d_canvas: enabled<br>GPU0: VENDOR= 0x10de, DEVICE=0x2705 [NVIDIA GeForce RTX 4070 Ti SUPER], DRIVER_VENDOR=NVIDIA, DRIVER_VERSION=32.0.15.9186 *ACTIVE*<br>GPU1: VENDOR= 0x1414, DEVICE=0x008c [Microsoft Basic Render Driver], DRIVER_VERSION=10.0.26100.8246<br>Machine model name: <br>Machine model version: <br>direct_rendering_display_compositor: disabled_off_ok<br>gpu_compositing: enabled<br>multiple_raster_threads: enabled_on<br>opengl: enabled_on<br>rasterization: enabled<br>raw_draw: disabled_off_ok<br>skia_graphite: disabled_off<br>trees_in_viz: disabled_off<br>video_decode: enabled<br>video_encode: enabled<br>webgl: enabled<br>webgl2: enabled<br>webgpu: enabled<br>webnn: disabled_off|
+|Load (avg)|undefined|
+|Memory (System)|63.91GB (54.38GB free)|
+|Process Argv|D:\\Projects\\Games\\IncarnusWarfare\\IncarnusWarfare.code-workspace --crash-reporter-id 7a6c2507-c44b-4e8f-8d06-918d5883f16a|
+|Screen Reader|no|
+|VM|0%|
+</details><details><summary>Extensions (8)</summary>
+
+Extension|Author (truncated)|Version
+---|---|---
+copilot-chat|Git|0.44.2
+unreal-angelscript|Haz|1.9.2
+unreal-angelscript-clang-format|Haz|3.1.0
+vscode-clangd|llv|0.4.0
+ue-clangd-helper|lud|1.0.6
+cpp-devtools|ms-|0.5.7
+cpptools|ms-|1.31.5
+chatgpt|ope|26.417.40842
+
+
+</details>
+<!-- generated by issue reporter -->",closed,['*duplicate'],Rawalanche,15,2026-04-22 15:45:31+00:00,2026-04-22 16:27:33+00:00,UNKNOWN,2020,False,False,Crash,50,0.0,False
+facebook/react,4232258426,Docs Improvement: Add Practical Guide for Debugging Hydration Mismatches,"## Summary
+
+The current React documentation explains hydration and briefly mentions mismatches, but it lacks a practical, developer-focused guide on how to debug hydration issues.
+
+In real-world SSR applications (e.g., Next.js), hydration mismatches are a common source of confusion and can be difficult to debug, especially for beginners and intermediate developers.
+
+---
+
+## Problem
+
+When developers encounter hydration warnings such as:
+
+""Text content does not match server-rendered HTML.""
+
+they often struggle to identify:
+
+- What caused the mismatch
+- Which component is responsible
+- How to systematically debug the issue
+
+The current documentation does not provide a clear debugging workflow or checklist.
+
+---
+
+## Suggested Improvement
+
+Add a dedicated section in the docs such as:
+
+### ""Debugging Hydration Mismatches""
+
+This section could include:
+
+### 1. Common Causes
+- Non-deterministic values:
+  - `Math.random()`
+  - `Date.now()`
+- Conditional rendering based on `window`, `document`, or browser-only APIs
+- Differences between server and client environment
+- Async data inconsistencies
+
+---
+
+### 2. Example of a Problem
+```jsx
+function App() {
+  return <div>{Math.random()}</div>;
+}",open,['Status: Unconfirmed'],Pantkartik,14,2026-04-09 12:39:33+00:00,,UNKNOWN,1197,False,True,UI,65,,False
+facebook/react,4226909649,Document Body Error Shut Off Setting,"I need to ignore this error:
+
+```
+createRoot(): Creating roots directly with document.body is discouraged, since its children are often manipulated by third-party scripts and browser extensions. This may lead to subtle reconciliation issues. Try using a container element created for your app.
+```
+
+I know what I'm doing.",open,['Status: Unconfirmed'],resistdesign,10,2026-04-08 18:54:14+00:00,,UNKNOWN,321,False,False,Other,50,,False
+facebook/react,4196981987,Bug: Large TypedArray props hang browser in dev mode in 19.2.X,"Passing a large TypedArray, e.g. Float32Array(25000000), as a prop to a component, causes rendering to hang in development mode in React >= 19.2. Production mode is unaffected. Earlier versions of React (<= 19.1.5) are unaffected in both dev and prod modes.
+
+Potentially related to #35126.
+
+React version: >=19.2
+
+## Steps To Reproduce
+
+Render the component `React192TypedArrayPropIssue` in the following code example:
+
+```TypeScript
+import React from 'react';
+
+function SlowToRenderInDevMode({array}: {array: Uint8Array}) {
+  return (
+    <>
+      <div>{array.length}</div>
+      <button>unclickable</button>    
+    </>
+  );
+}
+
+export function React192TypedArrayPropIssue() {
+  // const [array, setArray] = React.useState<Float32Array>(new Float32Array());
+  const [array, setArray] = React.useState<Uint8Array>(new Uint8Array());
+
+  React.useEffect(() => {
+    setArray(new Uint8Array(5000 * 5000));
+  }, []);
+
+  return (
+    <SlowToRenderInDevMode array={array}/>
+  )
+}
+```
+
+## The current behavior
+For a Uint8Array or Float32Array of length of 25000000, the render takes > 10seconds and freezes the browser.
+Non-typed arrays are unaffected by the issue.
+
+
+## The expected behavior
+In production mode (or earlier versions of React <=19.1.5) render is immediate.",open,['Status: Unconfirmed'],jschlechtvjt,6,2026-04-02 21:04:22+00:00,,UNKNOWN,1265,True,True,Performance,90,,False
+facebook/react,4148817632,[Compiler Bug]: Inconsistent memoization strategy for object with method shorthand vs function properties,"### What kind of issue is this?
+
+- [x] React Compiler core (the JS output is incorrect, or your app works incorrectly after optimization)
+- [ ] babel-plugin-react-compiler (build issue installing or using the Babel plugin)
+- [ ] eslint-plugin-react-hooks (build issue installing or using the eslint plugin)
+- [ ] react-compiler-healthcheck (build issue installing or using the healthcheck script)
+
+### Link to repro
+
+https://playground.react.dev/#N4Igzg9grgTgxgUxALhAgHgBwjALgAgDMoA7OXASwhPyjAQCEoBzACgEp9gAdG-OamALB89XADkIAEwRgANKIS4AolOaz8AX3wBeWvQCC6krgPkqJMBwDcvfPhhLYNHn3sBbBO4gUAXgik5O3t8XFlcAEYOLmCQxQlpWVZHSAAbADcEAGEIVNSKMAswdls3LSCysKEAJmjXOPsxVXUrFNzMnLyCopLY8r6q3ABmVgB9BRJEznqGgUtchAA6VIg2Nozs3PzCwV6yzQr7TV5jkhA5EDnCCmYUEAp3bDxQgE9MBC58AAVUlgoSADymEogi0RBgEHc+AA5AAjACGsIQqQAtJhfsx-ijHPDyCiBI8KKkEDAAPRSAq4aGlXisGak0kEzBE+EgkgAWUSyHw3BA8LyvJOolZBWuGh+f0BwJ61nO4AAFhAAO4ASRMJJI-LAKEIWoQmiAA
+
+### Repro steps
+
+React Compiler generates different memoization strategies depending on whether functions in a returned object are defined using method shorthand or function/arrow properties.
+
+In some cases, the compiler memoizes individual functions and reconstructs the object, while in others it memoizes the entire object directly.
+
+## Input
+
+```js
+export function useBug() {
+  const { setNodes, setEdges } = useAgentActions();
+  return {
+    memoized,
+    test1() {
+      setNodes(resolveCollisions);
+    },
+    test2() {
+      setEdges(resolveCollisions);
+    },
+    test3(_, node) {
+      console.log(resolveCollisions);
+    },
+  };
+}
+```
+
+## Compiled output
+
+```js
+import { c as _c } from ""react/compiler-runtime"";
+export function useBug() {
+  const $ = _c(3);
+  const { setNodes, setEdges } = useAgentActions();
+  let t0;
+  if ($[0] !== setEdges || $[1] !== setNodes) {
+    t0 = {
+      memoized,
+      test1() { // recreated when cached object is rebuilt
+        setNodes(resolveCollisions);
+      },
+      test2() { // recreated when cached object is rebuilt
+        setEdges(resolveCollisions);
+      },
+      test3(_, node) { // recreated when cached object is rebuilt
+        console.log(resolveCollisions);
+      },
+    };
+    $[0] = setEdges;
+    $[1] = setNodes;
+    $[2] = t0;
+  } else {
+    t0 = $[2];
+  }
+  return t0;
+}
+```
+
+## Additional example
+
+Using function expressions and arrow functions as object properties leads to a different memoization strategy:
+
+```js
+export function useBug() {
+  const { setNodes, setEdges } = useAgentActions();
+  return {
+    memoized,
+    test1: () => {
+      setNodes(resolveCollisions);
+    },
+    test2: function () {
+      setEdges(resolveCollisions);
+    },
+    test3: function TEST(_, node) {
+      console.log(resolveCollisions);
+    },
+  }
+}
+```
+
+## Compiled output
+
+```js
+import { c as _c } from ""react/compiler-runtime"";
+export function useBug() {
+  const $ = _c(8);
+  const { setNodes, setEdges } = useAgentActions();
+  let t0;
+  if ($[0] !== setNodes) {
+    t0 = () => {
+      setNodes(resolveCollisions);
+    };
+    $[0] = setNodes;
+    $[1] = t0;
+  } else {
+    t0 = $[1];
+  }
+  let t1;
+  if ($[2] !== setEdges) {
+    t1 = function () {
+      setEdges(resolveCollisions);
+    };
+    $[2] = setEdges;
+    $[3] = t1;
+  } else {
+    t1 = $[3];
+  }
+  let t2;
+  if ($[4] === Symbol.for(""react.memo_cache_sentinel"")) {
+    t2 = function TEST(_, node) {
+      console.log(resolveCollisions);
+    };
+    $[4] = t2;
+  } else {
+    t2 = $[4];
+  }
+  let t3;
+  if ($[5] !== t0 || $[6] !== t1) {
+    t3 = { memoized, test1: t0, test2: t1, test3: t2 };
+    $[5] = t0;
+    $[6] = t1;
+    $[7] = t3;
+  } else {
+    t3 = $[7];
+  }
+  return t3;
+}
+```
+
+## Conclusion
+
+In this case, the compiler memoizes each function (test1, test2, test3) independently and then reconstructs the object based on those memoized references.
+
+This differs from the method shorthand example, where the compiler memoizes the entire object as a single unit.
+
+### How often does this bug happen?
+
+Every time
+
+### What version of React are you using?
+
+19
+
+### What version of React Compiler are you using?
+
+latest",open,"['Type: Bug', 'Status: Unconfirmed']",dimaMachina,10,2026-03-27 03:01:09+00:00,,UNKNOWN,4044,True,True,UI,90,,False
+facebook/react,4119407377,[Compiler Bug]: React Compiler bug: closure is lost in `useEffect` when component is returned from a factory (causes `ReferenceError: <identifier> is not defined`),"### What kind of issue is this?
+
+- [x] React Compiler core (the JS output is incorrect, or your app works incorrectly after optimization)
+- [ ] babel-plugin-react-compiler (build issue installing or using the Babel plugin)
+- [ ] eslint-plugin-react-hooks (build issue installing or using the eslint plugin)
+- [ ] react-compiler-healthcheck (build issue installing or using the healthcheck script)
+
+### Link to repro
+
+https://github.com/budarin/react-compiler-bug-repro
+
+### Repro steps
+
+1. Create a Vite React TS project with React Compiler enabled.
+2. Use a factory function that returns a component and captures injected dependencies (e.g. `showWelcomeNotification`) in a closure.
+3. Inside the returned component, call the injected dependency in a `useEffect`.
+4. Run the dev server; a runtime `ReferenceError` occurs.
+
+### How often does this bug happen?
+
+Every time
+
+### What version of React are you using?
+
+19.2.4
+
+### What version of React Compiler are you using?
+
+1.0.0",open,"['Type: Bug', 'Status: Unconfirmed']",budarin,14,2026-03-23 09:12:36+00:00,,UNKNOWN,978,True,True,UI,90,,False
+facebook/react,4062579574,Bug: eslint-plugin-react-hooks Typescript types are broken,"<!--
+  Please provide a clear and concise description of what the bug is. Include
+  screenshots if needed. Please test using the latest version of the relevant
+  React packages to make sure your issue has not already been fixed.
+-->
+
+React version:
+
+## Steps To Reproduce
+
+1. npm i eslint-plugin-react-hooks
+2. configure TypeScript to strict mode,
+3. use plugin in `eslint.config.ts` like `pluginReact.configs.flat.recommended`
+4. See error:
+
+```
+Type 'ReactFlatConfig | undefined' is not assignable to type 'InfiniteArray<ConfigWithExtends>'.
+  Type 'undefined' is not assignable to type 'InfiniteArray<ConfigWithExtends>'.
+```
+
+<!--
+  Your bug will get fixed much faster if we can run your code and it doesn't
+  have dependencies other than React. Issues without reproduction steps or
+  code examples may be immediately closed as not actionable.
+-->
+
+Link to code example:
+
+<!--
+  Please provide a CodeSandbox (https://codesandbox.io/s/new), a link to a
+  repository on GitHub, or provide a minimal code example that reproduces the
+  problem. You may provide a screenshot of the application if you think it is
+  relevant to your bug report. Here are some tips for providing a minimal
+  example: https://stackoverflow.com/help/mcve.
+-->
+
+## The current behavior
+
+Forced to use non-null assertion but it is banned in my eslint config =)
+
+
+## The expected behavior
+
+Types can declare each existing property of `flat` object",open,['Status: Unconfirmed'],krutoo,7,2026-03-12 06:45:53+00:00,,UNKNOWN,1422,True,False,Other,75,,False
+facebook/react,4055723080,"[Fizz] Bug: Nested suspense boundary with suspended fallback: ""A previously unvisited boundary must have exactly one root segment""","There's a bug in a nested Suspense where the inner fallback itself suspends (via use() on a delay promise), and the inner content resolves before the fallback. Fizz mis-tracks boundary segments during the transition from ""pending with suspended fallback"" to ""completed.""
+
+This is a useful pattern for when you want to create a `DeferredSuspense` boundary that blocks for a pre-set amount of time and then flushes. If the period passes and the children have not un-suspended, we flush the alternate boundary to the client.
+
+I am aware this a cursed use of suspense, but it should be valid imo.
+
+
+React version: 19.2.4
+
+## Steps To Reproduce
+
+1. `$ node nested-suspense-bug-repro.mjs`
+
+Link to code example:
+
+https://gist.github.com/switz/45d7c9f49953e11de7eec9d737841e2e#file-nested-suspense-bug-repro-mjs
+
+## The current behavior
+
+```
+$ node nested-suspense-bug-repro.mjs
+onError: A previously unvisited boundary must have exactly one root segment. This is a bug in React.
+Bug triggered: A previously unvisited boundary must have exactly one root segment. This is a bug in React.
+```
+
+## The expected behavior
+
+ When content resolves FAST (before ms):
+  - No fallback is ever shown — content renders directly
+
+  When content resolves SLOW (after ms):
+  - For the first ms milliseconds, nothing visible changes (outer Suspense holds)
+  - After ms, the fallback appears (inner Suspense fallback delay resolves, outer Suspense can now show its
+   content which includes the pending inner boundary with its fallback)
+  - When content finally resolves, it replaces the fallback via streaming
+
+  The basic mechanics:
+```
+  <Suspense fallback={fallback}>              ← outer: catches if inner fallback suspends
+    <Suspense fallback={<Delay ms={200}>{fallback}</Delay>}>  ← inner: delay on fallback
+      {children}                               ← the actual async content
+    </Suspense>
+  </Suspense>
+```
+
+  1. Children suspend → inner Suspense tries its fallback
+  2. Fallback has <Delay ms={200}> which also suspends → outer Suspense catches both
+  3. If children resolve before 200ms → inner boundary completes, outer shows content directly (no fallback
+   flash)
+  4. If 200ms elapses first → delay resolves, outer can now render (shows inner's fallback), children
+  stream in later
+
+  The bug is in case 3 — Fizz crashes instead of rendering the content directly.
+",closed,['Status: Unconfirmed'],switz,6,2026-03-11 04:33:59+00:00,2026-03-11 12:18:28+00:00,UNKNOWN,2366,True,True,Crash,90,0.0,False
+facebook/react,4054267193,Bug: False postive react-hooks/refs,"Since React 19 devs can pass `ref` directly as a prop (forwardref is not needed anymore) , but now `eslint-plugin-react-hooks` is complaining about valid code 
+
+
+<img width=""1156"" height=""658"" alt=""Image"" src=""https://github.com/user-attachments/assets/19b68b28-c546-4066-8de1-54d663cda135"" />
+
+---
+
+React version: 19.1.1
+eslint-plugin-react-hooks: 7.0.1
+
+## Steps To Reproduce
+
+```tsx
+import type { Ref } from 'react';
+import {
+  StyleProp,
+  TextInput as RNTextInput,
+  TextInputProps,
+  TextStyle,
+} from 'react-native';
+
+import { TextInput } from '../TextInput';
+
+function TextArea(
+  props: TextInputProps & {
+    ref?: Ref<RNTextInput | null>;
+    style?: StyleProp<TextStyle>;
+  },
+) {
+  return (
+    <TextInput
+      ref={props.ref} // Eslint error: react-hooks/refs
+      type=""body""
+    />
+  );
+}
+
+export { TextArea };
+
+```
+
+## The current behavior
+Error 
+`ref={props.ref} // Eslint error: react-hooks/refs`
+
+## The expected behavior
+
+No error, valid react 19 code 
+",open,['Status: Unconfirmed'],retyui,7,2026-03-10 21:15:20+00:00,,UNKNOWN,976,True,True,Other,90,,False
+facebook/react,4046760592,Bug: `<ViewTransition>` name-prop change does not trigger view transition without child DOM mutation,"A `<ViewTransition>` whose `name` prop changes between renders does **not** trigger the view transition update pipeline unless a child DOM mutation also occurs. Hero morphs via name-prop toggling on mounted components silently produce no animation.
+
+## React version
+
+- `react`: `19.3.0-canary-46103596-20260305`
+- `react-dom`: `19.3.0-canary-46103596-20260305`
+
+## Steps to reproduce
+
+1. Mount two `<ViewTransition>` boundaries wrapping a button and a dialog
+2. Toggle the `name` prop between them (one gets `""camera-hero""`, the other `undefined`) via `startTransition` + `addTransitionType`
+3. No child DOM mutations occur during the transition
+
+**Reproduction repo:** https://github.com/kjanat/react-canary-19.3.0-view-transition-bug  
+**Live preview:** https://kjanat.github.io/react-canary-19.3.0-view-transition-bug/  
+**CodeSandbox:** https://codesandbox.io/p/sandbox/yx5sdy
+
+Toggle between **Broken** and **Workaround** modes to see the difference.
+
+Minimal repro component:
+
+```tsx
+<ViewTransition
+  name={heroOwner === 'button' ? 'camera-hero' : undefined}
+  share=""camera-hero-morph""
+  default=""none""
+>
+  <button>Use live camera</button>
+</ViewTransition>
+
+<ViewTransition
+  name={heroOwner === 'dialog' ? 'camera-hero' : undefined}
+  share=""camera-hero-morph""
+  default=""none""
+>
+  <dialog ref={dialogRef}>{modalContent}</dialog>
+</ViewTransition>
+```
+
+The `heroOwner` state toggles between `'button'` and `'dialog'` inside `startTransition` with `addTransitionType('camera-modal')`.
+
+## Expected behavior
+
+Opening the modal morphs smoothly from the trigger button to the dialog (shared `camera-hero` element with CSS view-transition animations).
+
+## Actual behavior
+
+Modal appears instantly -- no hero morph animation. See [root cause &sect;1](#1-name-only-changes-do-not-produce-update) for the code path that leads to a zero-opacity cancellation.
+
+### Workaround
+
+Two changes required simultaneously (visible in workaround mode in the reproduction):
+
+1. **`update` prop** -- unblocks VT processing (otherwise `default='none'` gates it out):
+   ```tsx
+   update={{ default: 'none', 'camera-modal': 'camera-hero-morph' }}
+   ```
+2. **Forced child DOM mutation** -- sets the internal `Update` flag on the VT fiber:
+   ```tsx
+   <button data-hero-owner={heroOwner}>Use live camera</button>
+   ```
+
+The `data-hero-owner` attribute serves no purpose other than forcing a child DOM mutation that sets a flag which logically should depend on the name change itself.
+
+## Root cause (source references)
+
+All references below are GitHub permalinks to React commit [`4610359651fa10247159e2050f8ec222cb7faa91`][react-commit], matching `react-dom@19.3.0-canary-46103596-20260305`.
+
+### 1. Name-only changes do not produce `Update`
+
+In [`measureViewTransitionHostInstancesRecursive`][measure-recursive], the `Update` flag gates whether `applyViewTransitionName` fires for the new snapshot:
+
+```js
+(parentViewTransition.flags & Update) !== NoFlags
+  && applyViewTransitionName(instance, newName, className);
+```
+
+In this code path, the `Update` flag is set in the mutation phase ([`ReactFiberCommitWork.js#L2634-L2645`][update-flag-set]) when `viewTransitionMutationContext` is `true`:
+
+```js
+viewTransitionMutationContext && (finishedWork.flags |= Update);
+```
+
+`viewTransitionMutationContext` becomes `true` when a DOM mutation (attribute change, text change, element insertion/removal) occurs within the VT's child subtree during the mutation commit. The `Update` flag can also be set during measurement if `hasInstanceChanged()` detects a bounding-rect change ([L676-681][has-instance-changed]), but in this scenario (name-only prop change, no layout shift), measurements are identical and this path returns false.
+
+When only the VT's `name` prop changes, with no child mutations and no layout change, the flag stays `NoFlags`. Without `Update`, the instance is not passed to `applyViewTransitionName` but is instead pushed to `viewTransitionCancelableChildren`, which leads to a zero-opacity cancellation path in [`ReactFiberConfigDOM.js#L1616-L1640`][cancel-animation]:
+
+```js
+current.animate(
+  { opacity: [0, 0], pointerEvents: ['none', 'none'] },
+  { duration: 0, fill: 'forwards', pseudoElement: '::view-transition-group(' + oldName + ')' },
+);
+```
+
+> **Note:** this cancellation path is only reachable when the `update` prop unblocks before-mutation snapshot capture and after-mutation measurement. With `default='none'` and no `update` prop, host instances never receive VT names in the first place, so they never reach `viewTransitionCancelableChildren`. The zero-opacity cancellation manifests specifically in the partial-workaround state (setting `update` without also forcing a DOM mutation).
+
+React already detects the name change in `beginWork` at [`ReactFiberBeginWork.js#L3617-L3622`][name-change-detected]:
+
+```js
+if (current !== null && current.memoizedProps.name !== pendingProps.name) {
+  workInProgress.flags |= Ref | RefStatic;
+}
+```
+
+This sets `Ref | RefStatic` for ref lifecycle, but it does not propagate into the commit phase as a VT update signal.
+
+### 2. `default='none'` gates out the update path (compounding)
+
+The `share` prop name suggests it controls shared-element/hero morphs, but in the source it is consulted in the **enter/exit pair** path ([`commitEnterViewTransitions`][commit-enter] and [`commitExitViewTransitions`][commit-exit]) and not in the update path. When both VTs stay mounted and only change their `name` prop, React routes through the **update** path, which calls `getViewTransitionClassName(props.default, props.update)` in two phases:
+
+| Phase           | Source permalink                                                       | Gate                                                                |
+| --------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Before-mutation | [`ReactFiberCommitViewTransitions.js#L489-L513`][before-mutation-gate] | Class name `=== 'none'` &rarr; skip old-snapshot VT name application     |
+| After-mutation  | [`ReactFiberCommitViewTransitions.js#L768-L803`][after-mutation-gate]  | Class name `=== 'none'` &rarr; skip measurement and new-snapshot VT name |
+
+The mutation phase ([`ReactFiberCommitWork.js#L2623-L2633`][update-mutation-gate]) also checks the class name to set `inUpdateViewTransition`, but this variable controls Portal context propagation in the traced code path -- the `Update` flag assignment at [L2634-L2645][update-flag-set] is gated by `viewTransitionMutationContext`, not by the class name.\
+So `default='none'` blocks the before/after-mutation phases, while the missing DOM mutation independently blocks the `Update` flag.
+
+### 3. Separate observation: `share` not consulted in update path
+
+The `share` prop is only consulted in the enter/exit pair path and not in the update path. This may be by-design (the update path handles DOM mutations, not shared-element pairing), but the documentation is silent on the expected behavior when only `name` changes on a mounted `<ViewTransition>`.
+
+## Suggested fix
+
+The name-change detection in [`beginWork`][name-change-detected] (`current.memoizedProps.name !== pendingProps.name`) could additionally set the `Update` flag or an equivalent signal, so the commit phase treats the VT as updated even without child DOM mutations.
+
+A cleaner alternative is to keep the fix local to the mutation-phase commit handler for `ViewTransitionComponent`, adding a name-change check alongside `viewTransitionMutationContext`:
+
+```js
+} else if (
+  viewTransitionMutationContext
+  || current.memoizedProps.name !== finishedWork.memoizedProps.name
+) {
+  finishedWork.flags |= Update;
+}
+```
+
+This would keep the `Update` flag closer to its apparent current usage (set during mutation phase, consumed in measurement) without changing `beginWork` flag behavior.
+
+Additionally, the `share` className may need to be consulted in the update path when a name change is detected, not only in the enter/exit pair path.
+
+## Docs note
+
+The `<ViewTransition>` documentation distinguishes `share` (enter/exit pairing) from `update` (DOM mutations / layout effects), but does not clarify what should happen when only the `name` prop changes across already-mounted `<ViewTransition>` boundaries. It's unclear whether mounted name toggling is expected to produce a transition or is intentionally unsupported.
+
+[react-commit]: https://github.com/facebook/react/commit/4610359651fa10247159e2050f8ec222cb7faa91
+[measure-recursive]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitViewTransitions.js#L642-L705
+[has-instance-changed]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitViewTransitions.js#L676-L681
+[cancel-animation]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js#L1616-L1640
+[update-flag-set]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitWork.js#L2634-L2645
+[before-mutation-gate]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitViewTransitions.js#L489-L513
+[after-mutation-gate]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitViewTransitions.js#L768-L803
+[name-change-detected]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberBeginWork.js#L3617-L3622
+[update-mutation-gate]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitWork.js#L2623-L2633
+[commit-enter]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitViewTransitions.js#L287-L326
+[commit-exit]: https://github.com/facebook/react/blob/4610359651fa10247159e2050f8ec222cb7faa91/packages/react-reconciler/src/ReactFiberCommitViewTransitions.js#L409-L451
+",open,['Status: Unconfirmed'],kjanat,6,2026-03-09 16:59:24+00:00,,UNKNOWN,10270,True,True,UI,90,,False
+facebook/react,4033583753,Bug: React Compiler does not preserve HTML entity,"When using React Compiler on this component:
+
+```jsx
+export default function MyApp() {
+  return (
+    <div>
+      &#32;
+      <span>hello world</span>
+    </div>
+  );
+}
+```
+the HTML entity gets removed with compiler:
+
+```js
+import { c as _c } from ""react/compiler-runtime"";
+export default function MyApp() {
+  const $ = _c(1);
+  let t0;
+  if ($[0] === Symbol.for(""react.memo_cache_sentinel"")) {
+    t0 = (
+      <div>
+        <span>hello world</span>
+      </div>
+    );
+    $[0] = t0;
+  } else {
+    t0 = $[0];
+  }
+  return t0;
+}
+```
+
+
+React version: 19.2.4
+
+## Steps To Reproduce
+
+Link to code example: https://playground.react.dev/#N4Igzg9grgTgxgUxALhAgHgBwjALgAgBMEAzAQygBsCSoA7OXASwjvwFkBPAQU0wAoAlPmAAdNvhgJcsNv3H5F+ADyEmANwB8CpYoBkAYgDMAJgDcO3crCYydTQAsElShHwB3HJULKA9DbttCUU-NS0dQQs6AF9xEAAaEDhWEiYAcxQQJgBbbDx8XE5MBBF8AAVKKDSmOgB5TGZWMHxo-BIYCGz8AHIAIzJe5wBaTErquiGpMkYh5NymSgQYXzUwXG6o8X4xCV9fOcwFska6dghiZHxREDIXa-FWsGOmMFSEZoqqmvqTsEiE8AOCDuACSdFwSzotzAKHIlDACGiQA
+
+## The current behavior
+
+HTML entity is removed.
+
+## The expected behavior
+
+HTML entity should be kept as-is.",open,['Status: Unconfirmed'],mihkeleidast,8,2026-03-06 11:01:09+00:00,,UNKNOWN,1087,True,True,UI,90,,False
+facebook/react,4017954987,[DevTools Bug]: confused on prerender pages and resulting in high-cpu usage loop,"### Website or app
+
+example; https://yuri.twintail.org/chrome/prerendering/specrules.html
+
+### Repro steps
+
+Hello, I'm Takashi from Google Chrome team.
+
+I've investigated high-cpu usage issue on prerendering, and noticed that the React Developer Tools seems to be a root cause.
+The original report for the chromium project is here; https://crbug.com/478909972
+
+Steps:
+1. Install React Developer Tools Extension (from the Chrome Web Store)
+2. Visit a page that uses specupationrules
+3. Open Chrome's Task manager from ... > More tools >, and see CPU usages
+4. Usage for the prerender pages shows higher CPU usages
+5. Open DevTools
+6. Prerender pages' CPU usages get much higher, and frame of the React Developer Tools spends almost 100%
+
+This needs that the current page is accessible from the Extensions. e.g., they would not have a permission to touch the New Tab Page, and this doesn't happen there.
+
+Also, this happens with Chrome UI triggered pretenders too. So, even if the page doesn't use the speculationrules, the problem could happen when users type something in the Omnibox, and Chrome has confidence on the next navigating page.
+
+I suspect this is because the extension doesn't expect the Chrome's recent MPArch: Multi-Page Architecture, and is confused on multiple page navigations.
+Here is a resource for the prerender and link for its impact on the Extension system.
+[Prerender pages in Chrome for instant page navigations > Impact on extensions
+](https://developer.chrome.com/docs/web-platform/prerender-pages#impact_on_extensions)
+
+### How often does this bug happen?
+
+Every time
+
+### DevTools package (automated)
+
+_No response_
+
+### DevTools version (automated)
+
+_No response_
+
+### Error message (automated)
+
+_No response_
+
+### Error call stack (automated)
+
+```text
+
+```
+
+### Error component stack (automated)
+
+```text
+
+```
+
+### GitHub query string (automated)
+
+```text
+
+```",closed,"['Type: Bug', 'Component: Developer Tools']",toyoshim,6,2026-03-03 17:47:53+00:00,2026-03-04 12:39:19+00:00,UNKNOWN,1891,True,True,UI,90,0.0,False
+facebook/react,4009603204,Bug:,"<!--
+  Please provide a clear and concise description of what the bug is. Include
+  screenshots if needed. Please test using the latest version of the relevant
+  React packages to make sure your issue has not already been fixed.
+-->
+
+React version:
+
+## Steps To Reproduce
+
+1.
+2.
+
+<!--
+  Your bug will get fixed much faster if we can run your code and it doesn't
+  have dependencies other than React. Issues without reproduction steps or
+  code examples may be immediately closed as not actionable.
+-->
+
+Link to code example:
+
+<!--
+  Please provide a CodeSandbox (https://codesandbox.io/s/new), a link to a
+  repository on GitHub, or provide a minimal code example that reproduces the
+  problem. You may provide a screenshot of the application if you think it is
+  relevant to your bug report. Here are some tips for providing a minimal
+  example: https://stackoverflow.com/help/mcve.
+-->
+
+## The current behavior
+
+
+## The expected behavior
+",open,['Status: Unconfirmed'],tiagolimacamposoficial-cyber,7,2026-03-02 06:44:00+00:00,,UNKNOWN,940,True,False,Other,75,,True
+facebook/react,3959830413,Bug: useDeferredValue gets stuck with a stale value,"Essentially, I see `useDeferredValue` being stuck and never catching up.
+
+Not sure if it's possible to extract it out of a Next.js app. I think it's probably a React bug because it seems related to core APIs, but I couldn't simplify it past the ""render some JSX from server action"" repro case.
+
+## Demo
+
+Type ""hello world"".
+
+In dev (`npm run dev`), the second text area catches up.
+
+In prod (`npm run build + npm start`), the second text area often gets stuck and never catches up.
+
+https://github.com/user-attachments/assets/a44f01ad-1a7d-4420-a6da-cadb277ded72
+
+## Code
+
+Here is a repro case: https://github.com/gaearon/react-udv-bug/
+
+This is the main harness:
+
+```js
+export function TestPreviewClient() {
+  const [promise, setPromise] = useState<Promise<ReactNode>>(initialPromise);
+  const deferred = useDeferredValue(promise);
+
+  function handleChange(value: string) {
+    setPromise(renderAction(value));
+  }
+
+  return (
+    <div style={{ padding: 16, fontFamily: ""monospace"" }}>
+      <textarea
+        placeholder=""type here""
+        onChange={(e) => handleChange(e.target.value)}
+        rows={3}
+        style={{ width: ""100%"", fontFamily: ""monospace"" }}
+      />
+      <div
+        data-testid=""deferred""
+        style={{ border: ""1px solid #ccc"", padding: 8, minHeight: 40 }}
+      >
+        <Suspense fallback={<div>loading...</div>}>
+          <Resolved promise={deferred} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+```
+
+Note these helpers:
+
+```js
+export function ClientWrapper({ children }: { children: ReactNode }) {
+  const t = performance.now();
+  while (performance.now() - t < 2) {
+    // do nothing
+  }
+  return <>{children}</>;
+}
+
+function Resolved({ promise }: { promise: Promise<ReactNode> }) {
+  return <>{use(promise)}</>;
+}
+```
+
+And this is the server part:
+
+```js
+async function AsyncChild({
+  children,
+}: {
+  children: ReactNode;
+}): Promise<ReactNode> {
+  await new Promise((r) => setTimeout(r, 1));
+  return children;
+}
+
+async function Item({ children }: { children: ReactNode }): Promise<ReactNode> {
+  return (
+    <ClientWrapper>
+      <AsyncChild>{children}</AsyncChild>
+    </ClientWrapper>
+  );
+}
+
+export async function renderAction(input: string): Promise<ReactNode> {
+  return (
+    <Item>
+      <div>
+        <Item>
+          <div>{input}</div>
+        </Item>
+      </div>
+    </Item>
+  );
+}
+```
+
+You can generally simplify this structure but then it will be harder to reproduce.",closed,"['Type: Bug', 'Component: Suspense']",gaearon,6,2026-02-18 21:15:25+00:00,2026-03-24 00:49:06+00:00,UNKNOWN,2433,False,True,Performance,65,33.0,False
+nodejs/node,4293209577,Runtime-deprecate calling digest() on HMAC more than once,"(Upd: detected by the scanner behind @deepview-autofix)
+
+Hash behavior is reasonable:
+```js
+> hash = require('crypto').createHash('sha256').update('data')
+> hash.digest()
+<Buffer 3a 6e b0 79 0f 39 ac 87 c9 4f 38 56 b2 dd 2c 5d 11 0e 68 11 60 22 61 a9 a9 23 d3 bb 23 ad c8 b7>
+> hash.digest()
+Uncaught Error [ERR_CRYPTO_HASH_FINALIZED]: Digest already called
+    at Hash.digest (node:internal/crypto/hash:155:11) {
+  code: 'ERR_CRYPTO_HASH_FINALIZED'
+}
+```
+
+But HMAC, on the other hand, returns empty buffers on further `.digest()` calls, likely for compat reasons:
+```js
+> hmac = require('crypto').createHmac('sha256', 'key').update('data')
+> hmac.digest()
+<Buffer 50 31 fe 3d 98 9c 6d 15 37 a0 13 fa 6e 73 9d a2 34 63 fd ae c3 b7 01 37 d8 28 e3 6a ce 22 1b d0>
+> hmac.digest()
+<Buffer >
+```
+
+This is a footgun with potential security risks, and should be first runtime-deprecated, then removed if no breakage is detected.
+
+---
+
+<img width=""1170"" height=""155"" alt=""Image"" src=""https://github.com/user-attachments/assets/5b0e40bc-95ed-49b8-b696-299176bcc01d"" />",open,"['crypto', 'security']",ChALkeR,7,2026-04-20 05:05:11+00:00,,UNKNOWN,1060,False,True,UI,65,,False
+nodejs/node,4278206327,"20.20.2: V8 accepts pre-CVE-2026-21717 code caches, SIGSEGV on property access","### Version
+
+20.20.2
+
+### Platform
+
+```text
+only tested on `linux/amd64` so far
+```
+
+### Subsystem
+
+_No response_
+
+### What steps will reproduce the bug?
+
+> **Authorship note.** This write-up was primarily drafted by Anthropic's Claude (Opus 4.7) working with the human reporter during the investigation. All empirical claims — reproducer output, the bisect matrix, cache-header dumps, fuzz counts, and version compatibility tests — come from runs actually performed on the machines described below; the reproduction scripts in this directory (`run.sh`, `verify-matched.sh`, both `Dockerfile`s, `repro.js`) are the exact scripts that produced them. Interpretive claims about V8 internals are inference from the cited commits / source files and should be treated as such unless they point directly at a linked V8 source file.
+
+## Reproduction code
+
+https://github.com/smaeda-ks/node-20.20.2-bug-report-20260417
+
+## TL;DR
+
+`vm.Script({ cachedData })` in Node.js **v20.20.2** accepts a code cache that was produced by **v20.20.0** or **v20.20.1** (`cachedDataRejected === false`, `v8.cachedDataVersionTag()` is identical at `0x12098dbb`) despite the [CVE-2026-21717 HashDoS fix](https://nodejs.org/en/blog/vulnerability/march-2026-hashdos) (commit [`af5c144ebc`](https://github.com/nodejs/node/commit/af5c144ebc)) having changed the on-disk encoding of `Name` hash fields. Running the cached bytecode SIGSEGVs as soon as a `Proxy` (or any object with a non-trivial `[[Get]]` accessor, e.g. `URL`) is accessed using one of a specific set of names. At least these names reproduce:
+
+```
+all  big  blink  href  join  small  status  strike  sub  sup  toLocaleString  tt
+```
+
+(these are the crashing names I have observed so far — not an exhaustive list; a ~10k-random-string fuzz found zero triggers, so the set appears biased toward well-known / pre-interned names. See the ""Which property names reproduce"" section.) The equivalent backports to **22.22.2** and **24.14.1** do *not* exhibit this in my tests; there V8 correctly rejects the old cache (`cachedDataRejected === true`).
+
+Tested on **linux/amd64** only. I haven't verified arm64 / Graviton behavior.
+
+Minimal source that crashes when cross-version cached:
+
+```js
+new Proxy({}, { get() { return 1; } }).href;
+```
+
+## Reproduce
+
+```
+./run.sh
+```
+
+Expected tail output:
+
+```
+[make] node=v20.20.0 v8=11.3.244.8-node.33 cachedDataVersionTag=0x12098dbb bytes=432
+
+[run]  node=v20.20.2 v8=11.3.244.8-node.38 cachedDataVersionTag=0x12098dbb cachedDataRejected=false bytes=432
+*** REPRODUCED: exit=139 (SIGSEGV) ***
+```
+
+## Root cause (bisect-confirmed)
+
+Commit [`af5c144ebc`](https://github.com/nodejs/node/commit/af5c144ebc) (*""deps,build,test: fix array index hash collision""*) lands the Node.js side of the March-2026 HashDoS fix ([CVE-2026-21717](https://nodejs.org/en/blog/vulnerability/march-2026-hashdos)). It turns on `v8_enable_seeded_array_index_hash` in [`tools/v8_gypfiles/features.gypi`](https://github.com/nodejs/node/blob/v20.20.2/tools/v8_gypfiles/features.gypi) and vendors rapidhash-v8, which together change how V8 stores array-index values inside a `Name`'s 32-bit hash field. Per the blog post, the layout is:
+
+```
+ bit:  31          26 25                                  2 1 0
+       +-------------+-----------------------------------+---+
+ old:  |  length  (6)|      raw integer value       (24) | flags |
+       +-------------+-----------------------------------+---+
+ new:  |  length  (6)|  SeedArrayIndexValue(value) (24)  | flags |
+       +-------------+-----------------------------------+---+
+```
+
+`SeedArrayIndexValue` is a three-round xorshift-multiply bijection whose three multipliers (`m1`, `m2`, `m3`) are derived from rapidhash secrets that live in V8's read-only roots (baked into the V8 binary at build time). `UnseedArrayIndexValue` is the inverse, using precomputed modular inverses.
+
+Cached bytecode produced by v20.20.0 or v20.20.1 encodes integer-index `Name::hash_field` values using the *old* layout (raw integer, no seeding). When v20.20.2 deserializes that cache and later runs a keyed property lookup, V8 interprets the same 24 bits as `SeedArrayIndexValue(value)` and calls `UnseedArrayIndexValue` on them — the inverse of a permutation that was never applied in the first place. For a specific set of property names (see below), this encoding mismatch causes V8 to SIGSEGV during property lookup. I did not trace the exact failing V8 code path beyond localizing it to the keyed-load slow path; the blog post's `SeedArrayIndexValue` / `UnseedArrayIndexValue` description is what I'm basing the encoding model on.
+
+I confirmed the commit is responsible by building two v20.20.2 Node binaries from the same `debian:bookworm-slim` base with the same `./configure` flags — one stock, one with `git revert af5c144ebc` applied — and running the minimal reproducer as producer/consumer in all four matched pairs:
+
+```
+  A. stock    -> stock    (baseline) exit=0
+  B. reverted -> reverted (baseline) exit=0
+  C. reverted -> stock               exit=139  <-- SIGSEGV
+  D. stock    -> reverted            exit=139  <-- SIGSEGV
+```
+
+Same-binary pairs run cleanly; both cross-binary pairs crash. Since the only difference between `stock` and `reverted` is whether `af5c144ebc` is applied, the commit introduces a binary-incompatible on-disk encoding of `Name` hash fields without bumping any cache-header sanity field that would cause V8 to reject caches produced by the other half. (The `Dockerfile.revert`, `Dockerfile.stock`, and `verify-matched.sh` used for this bisect are in the repository root alongside `run.sh`.)
+
+The [upstream HashDoS blog post](https://nodejs.org/en/blog/vulnerability/march-2026-hashdos) discusses performance and statistical-quality tradeoffs of the hash change in detail, but does not explicitly mention code-cache invalidation implications.
+
+(Side note, not the primary bug: Node 20.20.2's [`tools/make-v8.sh`](https://github.com/nodejs/node/blob/v20.20.2/tools/make-v8.sh) also passes `v8_use_default_hasher_secret=false` — which, if applied, would make each V8 build generate its own rapidhash secrets instead of using the hardcoded `RAPIDHASH_DEFAULT_SECRET` constants from [`deps/v8/third_party/rapidhash-v8/secret.h`](https://github.com/nodejs/node/blob/v20.20.2/deps/v8/third_party/rapidhash-v8/secret.h). That would make any two independently-produced Node 20.20.2 builds have mutually-incompatible caches with no header field detecting it. I did not see this in practice between `node:20.20.2-slim` and `public.ecr.aws/lambda/nodejs:20` (their first-32-byte cache headers are bit-identical), so either the release pipeline produces identical binaries or the default `./configure` / `make` path doesn't actually forward this flag to V8. I didn't trace it further — flagging it only because it's a tail-risk worth keeping in mind for embedders that ship Node binaries.)
+
+### Which property names reproduce
+
+`""href""` is not unique. I ran two sweeps against the minimal template `new Proxy({}, {get(){return 1}}).NAME;`, building the bytecode cache on 20.20.0 and loading it on 20.20.2 for each candidate:
+
+1. **Exhaustive: all 2- and 3-letter lowercase ASCII combinations** (676 + 17 576 = 18 252 names). Crashing names: **`tt`**, **`all`**, **`big`**, **`sub`**, **`sup`** (5 / 18 252, ~0.03%).
+2. **Curated: ~250 common built-in / DOM / URL / collection method names.** Crashing names: **`blink`**, **`small`**, **`strike`**, **`href`**, **`join`**, **`status`**, **`toLocaleString`**.
+3. **Random: 15 000 random 4–8-char strings.** Zero crashes from the random sample.
+
+All 12 triggers I found are names that V8 is plausibly pre-interning in its read-only snapshot — the Annex-B legacy `String.prototype` HTML-wrapper methods (`big`, `blink`, `small`, `strike`, `sub`, `sup`), the built-ins `toLocaleString` / `join`, and common web/DOM names (`href`, `status`, `all`, `tt`). The random 15 000-string sweep produced zero crashes, which rules out a structural cache-format mismatch (which would crash on every name) and is consistent with the bug firing on strings whose `Name::hash_field` is *pre-computed and baked into the V8 binary's RO snapshot* rather than on strings hashed fresh at parse time. I did not verify V8's exact RO-snapshot string list, so ""pre-interned"" here is an inference from the observed pattern, not something I read out of V8's root table.
+
+### Why the syntactic form doesn't matter
+
+All four of these crash identically:
+
+```js
+new Proxy({}, {get(){return 1}}).href              // member expression
+new Proxy({}, {get(){return 1}})[""href""]           // bracket form
+Reflect.get(new Proxy({}, {get(){return 1}}), ""href"")
+new URL(""http://a"").href                           // real URL accessor
+```
+
+They all compile to V8's generic keyed-load path (something in the `KeyedLoadGeneric` / `LoadIC_NoFeedback` family for non-monomorphic receivers), which is the code path that consults the `Name`'s hash field and branches on its `HashFieldType`. A plain `({}).href` does **not** crash — the fast hidden-class path short-circuits to `undefined` before it ever consults the cached hash field.
+
+### Why the cache is still accepted
+
+V8's cache header (`SerializedCodeData`) carries several sanity-check words, but the set of fields differs between the 20.x line (V8 11.3) and the 22.x/24.x lines (V8 12.4 / 13.x). I confirmed the layouts directly against the bundled V8 source for each release:
+
+* 20.x: `SerializedCodeData` has **6 `uint32_t` fields** — magic, version_hash, source_hash, flag_hash, payload_length, checksum ([v20.20.2 `code-serializer.h`](https://github.com/nodejs/node/blob/v20.20.2/deps/v8/src/snapshot/code-serializer.h)).
+* 22.x / 24.x: `SerializedCodeData` has **7 `uint32_t` fields** — magic, version_hash, source_hash, flag_hash, **read_only_snapshot_checksum**, payload_length, checksum ([v22.22.2 `code-serializer.h`](https://github.com/nodejs/node/blob/v22.22.2/deps/v8/src/snapshot/code-serializer.h)).
+
+Dumping the first 32 bytes of `createCachedData()` for the same source `new Proxy({}, { get(){ return 1; } }).href;` on every version and lining the fields up by offset:
+
+| Offset | Field name (20.x / 22.x&24.x)                    | 20.20.1      | 20.20.2      | 22.22.1        | 22.22.2        | 24.13.1        | 24.14.1        |
+| ------ | ------------------------------------------------ | ------------ | ------------ | -------------- | -------------- | -------------- | -------------- |
+| +00    | magic                                            | `c0de05cc`   | `c0de05cc`   | `c0de0628`     | `c0de0628`     | `c0de0688`     | `c0de0688`     |
+| +04    | version_hash                                     | `00e4c20b`   | `00e4c20b`   | `79dafe74`     | `79dafe74`     | `dc338cfa`     | `dc338cfa`     |
+| +08    | source_hash                                      | `0000002b`   | `0000002b`   | `0000002b`     | `0000002b`     | `0000002b`     | `0000002b`     |
+| +12    | flag_hash                                        | `5f1581a7`   | `5f1581a7`   | `77e5cd4d`     | `77e5cd4d`     | `3aa21325`     | `3aa21325`     |
+| +16    | payload_length / **read_only_snapshot_checksum** | `00000198`   | `00000198`   | **`f23585ad`** | **`48d35134`** | **`d31c4342`** | **`a3a96c2a`** |
+| +20    | checksum / payload_length                        | `00000000`   | `00000000`   | `000001d0`     | `000001d0`     | `000001e0`     | `000001e0`     |
+
+* **Every one of the 20.20.1 header fields is bit-identical to 20.20.2**. `cachedDataVersionTag()` (`0x12098dbb`) didn't move despite the V8 embedder string bumping `-node.33` → `-node.34` → `-node.38`; neither did the flag_hash at +12. Since V8 only compares these fields in `SerializedCodeData::SanityCheck`, there's no signal to reject a pre-fix cache on 20.20.2.
+* On **22.22.1 → 22.22.2** and **24.13.1 → 24.14.1**, the `read_only_snapshot_checksum` at +16 moves (emboldened above). Enabling `v8_enable_seeded_array_index_hash` changes the RO snapshot contents, which changes this CRC, so the sanity check rejects pre-fix caches.
+* 20.x's V8 11.3 simply doesn't have that field — its +16 slot is `payload_length`, which is 408 bytes for our test source no matter which patch release produced it. That's why there's no analogous rejection on the 20.x line.
+
+## Versions tested
+
+| Producer → Consumer        | cachedDataVersionTag | cachedDataRejected | outcome        |
+| -------------------------- | -------------------- | ------------------ | -------------- |
+| v20.20.0 → v20.20.2        | 0x12098dbb (both)    | **false**          | **SIGSEGV**    |
+| v20.20.1 → v20.20.2        | 0x12098dbb (both)    | **false**          | **SIGSEGV**    |
+| v20.20.2 → v20.20.2        | 0x12098dbb           | false              | OK             |
+| v20.20.0 → v20.20.1        | 0x12098dbb (both)    | false              | OK             |
+| v22.22.1 → v22.22.2        | 0x4977cf6d (both)    | **true**           | OK (rejected)  |
+| v24.13.1 → v24.14.1        | 0x56c155c0 (both)    | **true**           | OK (rejected)  |
+
+Platform: linux/amd64. `public.ecr.aws/lambda/nodejs:20` is the AWS Lambda runtime base image (v20.20.2 today). Stock `node:20.20.0-slim` / `node:20.20.1-slim` from Docker Hub reproduce identically.
+
+## Suggested fix
+
+The 20.x V8 (11.3) cache header has no per-snapshot-CRC field, so the fix has to come from one of the fields it *does* have. Some concrete options for the Node.js / V8 maintainers to consider:
+
+* Make `cachedDataVersionTag()` / V8's `Version::Hash()` differ between pre-fix and post-fix builds. On 20.20.2 the V8 embedder string did bump (`-node.33` → `-node.34` → `-node.38`), but `cachedDataVersionTag()` stayed at `0x12098dbb` across all three, so whatever goes into `Version::Hash()` here apparently doesn't include the embedder string. A tweak that does feed through — e.g. a V8 patch-level bump in `deps/v8/src/version.cc`, or folding the embedder string into `Version::Hash()` — would force cache invalidation.
+* Force `FlagList::Hash()` to include a term that depends on `v8_enable_seeded_array_index_hash` being on, so the flag_hash at +12 moves when the feature is enabled.
+* Backport V8's `read_only_snapshot_checksum` header field to the 20.x V8 fork (the mechanism that makes 22.x / 24.x safe today). Larger change, but this is the safeguard designed into newer V8 for exactly this class of RO-snapshot-affecting patches.
+
+Until one of these is in place, embedders that persist V8 code caches across Node.js patch upgrades (build-once-run-later tools, serverless platforms shipping warm caches, and so on) should treat a 20.x patch bump as a hard cache-invalidation event and regenerate caches on first boot of the new runtime.
+
+
+### How often does it reproduce? Is there a required condition?
+
+https://github.com/smaeda-ks/node-20.20.2-bug-report-20260417
+
+### What is the expected behavior? Why is that the expected behavior?
+
+Reproduction code should not crash
+
+### What do you see instead?
+
+Reproduction code crashes with SIGSEGV
+
+### Additional information
+
+_No response_",open,[],smaeda-ks,7,2026-04-16 20:00:34+00:00,,UNKNOWN,15053,True,True,Crash,90,,False
+nodejs/node,4276019032,"crypto,quic: missing NULL checks for OpenSSL allocation functions","### Version
+
+v22.13.1
+
+### Platform
+
+```text
+A container based on Ubuntu 22.04 OS
+```
+
+### Subsystem
+
+crypto, quic
+
+### What steps will reproduce the bug?
+
+This is a set of latent defects found by static analysis (Svace), not
+a runtime-reproducible bug. The issues are:
+
+1. src/crypto/crypto_aes.cc, function AES_Cipher (line 46):
+   EVP_CIPHER_CTX_new() result used without NULL check.
+   Cross-file statistics: checked in 37 of 40 call sites.
+
+2. src/crypto/crypto_aes.cc, function AES_CTR_Cipher2 (line 225):
+   EVP_CIPHER_CTX_new() result used without NULL check.
+   Same detector, same function.
+
+3. src/crypto/crypto_ec.cc, function ECKeyExportTraits::DoExport 
+   (line 1264): EC_KEY_new() result used without NULL check.
+   Cross-file statistics: checked in 5 of 6 call sites.
+
+4. src/quic/tlscontext.cc, function TLSSession::Initialize (line 2051):
+   SSL_new() result used without NULL check.
+   Cross-file statistics: checked in 9 of 10 call sites.
+
+5. src/crypto/crypto_cipher.cc, function CipherBase::CommonInit
+   (line 2570): EVP_CIPHER_CTX_new() result wrapped in unique_ptr
+   and used without verifying it's non-null.
+
+### How often does it reproduce? Is there a required condition?
+
+Would manifest under memory pressure when OpenSSL fails to allocate
+internal structures. Not trivially reproducible in normal operation.
+
+### What is the expected behavior? Why is that the expected behavior?
+
+Allocation failures should result in a controlled error (thrown
+JavaScript exception or appropriate error status), not a NULL pointer
+dereference / segmentation fault.
+
+### What do you see instead?
+
+Potential SIGSEGV on allocation failure.
+
+### Additional information
+
+These findings come from the ISPRAS open-source static analysis
+working group. All issues are of the same class (OpenSSL allocation
+function return value used without NULL check) and can be fixed
+together.",open,"['crypto', 'good first issue']",UnLucky252,6,2026-04-16 13:26:36+00:00,,UNKNOWN,1885,True,False,UI,75,,False
+nodejs/node,4267792631,"""Authoring a large PR"" contribution guide","During the London 2026 Collab Summit at Bloomberg's (thanks for hosting!), we identified the need for a new policy describing how to:
+
+1. add a new subsystem
+2. doing significant modifications to existing subsystem
+3. making things easier to review in case of ""heavy"" code PRs
+
+I would take on preparing this policy, but I would need input from reviewers on what would make their lives easier.
+
+I've added a list underneath of what _I_ would like to see, feel free to comment underneath and I will update the list  
+
+---
+
+Key Requirements for this policy:
+
+* [ ] applies to any PR over 3000 (+/-) changes
+* [ ] requires the same approval path of a semver-major change (2 TSC approvals).
+* [ ] discourage non-collaborators to open them (ban them)
+* [ ] require an open issue/design document shared before the work start
+* [ ] add a review guide in the top description pointing to the key files to review
+* [ ] applies when adding a new dependency
+* [ ] ...",open,[],mcollina,11,2026-04-15 09:23:59+00:00,,UNKNOWN,955,False,False,UI,50,,False
+nodejs/node,4256500368,Proposal: new `vm` module primitives & loader API for ESM customization,"This proposes new vm module primitives that aim to replace the existing `vm.SourceTextModule` and provide a high-level loader API for ESM (specifically `SourceTextModule`) loading customization. 
+
+Consider this a very early draft for discussion. This is mostly to investigate whether a new design can addresses the existing issues. I am not 100% it's implementable yet, especially the loader customization part, but it's better to discuss what design would help developers before we think about what is easier to implement.
+
+There'll be a session about this new design at the collaboration summit too https://github.com/openjs-foundation/summit/issues/482
+
+## Background
+
+The `vm` module APIs have been behind `--experimental-vm-modules` for a long time. There was a [tracking issue](https://github.com/nodejs/node/issues/37648) about their stabilization and accumulated several issues over the years.
+
+The meaningful current users are concentrated in test tooling (Jest, Vitest). Recently there has been renewed momentum to look into what it takes to bring the API out of the experimental status. @legendecas and I have been adding some non-breaking changes e.g. `linkRequests()`, `instantiate()`, `moduleRequests`, `hasTopLevelAwait()`, `hasAsyncGraph()`, conditionally synchronous `evaluate()` so that it now provides capabilities required to implement something similar to how ESM is handled in the built-in loader - specifically, the linking process can be driven by those who construct the `SourceTextModule` instead of being driven from a `link` method with callbacks, and it can be conditionally synchronous as the spec allows. But it has become awkward to keep piling methods on the existing classes to do things differently without breaking the API.
+
+There are still a few issues with the current design:
+
+1. The `importModuleDynamically` and `initializeImportMeta` callbacks are passed as options to the module constructors, requiring careful memory management to avoid leaks when callbacks capture over referrers ([#33439](https://github.com/nodejs/node/issues/33439), [#50113](https://github.com/nodejs/node/issues/50113), [#59118](https://github.com/nodejs/node/issues/59118)), or use-after-free when remote code calls `import()` indirectly via a closure ([#47096](https://github.com/nodejs/node/issues/47096)). We've addressed for the main context with a [very intricate memory management scheme](https://joyeecheung.github.io/blog/2023/12/30/fixing-nodejs-vm-apis-1/), but for new contexts it's uncertain. The current implementation works but is not very GC-efficient, and this issue may not have existed in the first place if the callbacks are managed differently.
+2. `evaluate()` mixes loader errors (status errors, timeout) with module evaluation errors in a single promise rejection, making it hard to handle them differently ([#60242](https://github.com/nodejs/node/issues/60242)).
+3. Many users have expressed that the current API still requires too much plumbing if they only need partial customization. ([#31234](https://github.com/nodejs/node/issues/31234), [#35848](https://github.com/nodejs/node/issues/35848), [#43899](https://github.com/nodejs/node/issues/43899)).
+
+It seems better to consolidate the changes into a new API rather than continuing to pile onto the existing interface, while we can still steer the design during the experimental phase.
+
+## A draft for a new API
+
+The new API can live in a `'vm/modules'` module and exports `SourceTextModule`, `SyntheticModule`, and `SourceTextModuleLoader`.
+
+### Core idea
+
+Provide a `SourceTextModuleLoader` abstraction that users can subclass and override high-level processes they want to customize ([#43899](https://github.com/nodejs/node/issues/43899)). This loader can be used standalone, or registered in a given context:
+
+- `dynamicImport(request, context, parent)`
+- `importMeta(meta, context, parent)`
+- `getModules(requests, context, parent)` (resolving and linking a batch of modules for a set of import requests)
+
+In this model, `SourceTextModule` and `SyntheticModule` are primitives of the loader.
+
+When registered for a given context, the loader is responsible for resolving ESM requests, handling dynamic `import()`, and initializing `import.meta`. Instead of one callback per module, there is one loader per context.
+
+Note that this means once there's a loader registered, the internals have to wrap several constructs to be a publically accessible shape e.g. wrapping actual context into vm Context. So it can take a bit of refactoring and adds overhead, but should be managable.
+
+This is separate from `module.registerHooks()` which installs low-level hooks into built-in resolution/loading process for all types of modules - consider the hooks run underneath `super.getModules()`/`super.dynamicImport()` etc. as shown below, so they operate in a different layer. `SourceTextModuleLoader` is a higher level customization, and as the name implies, is specifically for handling `SourceTextModule`s - `SyntheticModule` does not have `import()` or `import.meta` or load other modules, so they are not applicable to the customization.
+
+### 1. Full customization
+
+```js
+import {
+  SourceTextModule,
+  SyntheticModule,
+  SourceTextModuleLoader,
+} from 'vm/modules';
+
+// Names starting with `helper` are only for this example,
+// they are not part of the API.
+class ExampleModuleLoader extends SourceTextModuleLoader {
+  #sourceStore = new Map();
+  #moduleCache = new Map();
+
+  // Invoked by Node.js to perform dynamic import(), overrides default.
+  dynamicImport(request, context, parent) {
+    const mod = this.helperGetSingleModule(request, context, parent);
+    mod.evaluate();
+    // topLevelCapability does not need to fulfill here.
+    // That promise will just be forwarded to the code actually
+    // awaiting the dynamic import().
+    return mod.namespace();
+  }
+
+  // Invoked by Node.js to initialize import.meta, overrides the default.
+  importMeta(meta, context, parent) {
+    // Objects attached to import.meta should typically be created
+    // in the target context via vm.runInContext() or similar.
+    meta.identifier = parent.identifier;
+  }
+
+  // Invoked by Node.js to resolve and compile modules for a set of
+  // import requests. The returned array must correspond 1:1 to the
+  // requests array.
+  // TODO: it's unclear whether getModules or getModule would work better
+  // for the internal way of resolving modules - supposedly batching helps
+  // with performance, but it also leaks internal ordering choices.
+  getModules(requests, context, parent) {
+    const result = [];
+    for (const { specifier } of requests) {
+      // Consult the custom cache first.
+      const cached = this.#moduleCache.get(specifier);
+      if (cached) { result.push(cached); continue; }
+
+      // Use the custom source store.
+      const source = this.#sourceStore.get(specifier);
+      if (!source) {
+        throw new Error('module not found');
+      }
+
+      const identifier = specifier;
+      const mod = new SourceTextModule(source, { identifier, context });
+
+      // Recursively get dependencies (DFS; users can implement BFS too).
+      const modules = this.getModules(mod.requests, context, mod);
+      mod.link(modules);
+
+      this.#moduleCache.set(specifier, mod);
+      result.push(mod);
+    }
+    return result;
+  }
+
+  // --- Example helpers (not part of the API) ---
+
+  helperGetSingleModule(request, context, parent) {
+    return this.getModules([request], context, parent)[0];
+  }
+
+  helperAddSource(identifier, source) {
+    this.#sourceStore.set(identifier, source);
+  }
+
+  helperAddBuiltin(identifier, mapping) {
+    const keys = Object.keys(mapping);
+    const mod = new SyntheticModule(keys, function() {
+      for (const key of keys) {
+        this.setExport(key, mapping[key]);
+      }
+    });
+    this.#moduleCache.set(identifier, mod);
+  }
+}
+```
+
+Preparing the custom loader:
+
+```js
+const loader = new ExampleModuleLoader();
+
+// If the loader needs to fetch the source asynchronously,
+// they can pre-fetch the whole graph from a known root,
+// so later when `getModules()` is run, it just loads from the
+// asynchronously prefetched graph synchronously  and sets up
+// the links. This is similar to what Node.js internally does.
+loader.helperAddSource('async-root', `
+  export { foo } from 'foo';
+  export let bar;
+  bar = await import('builtin:bar') + import.meta.identifier;
+`);
+
+loader.helperAddSource('sync-root', `
+  export { foo } from 'foo';
+  import { default as bar } from 'builtin:bar';
+  export const baz = bar + import.meta.identifier;
+`);
+
+loader.helperAddSource('foo', `
+  export const foo = globalThis.foo;
+`);
+
+loader.helperAddBuiltin('builtin:bar', { default: 'bar' });
+```
+
+#### 1.a. Async module graph in a new context
+
+```js
+import { createContext } from 'node:vm';
+const context = createContext({ foo: 'foo' });
+
+const [mod] = loader.getModules([{ specifier: 'async-root' }], context);
+
+// returns undefined or throws for any loader errors.
+mod.evaluate();
+
+mod.hasTopLevelAwait();  // true
+mod.hasAsyncGraph();  // true
+
+mod.namespace();  // { foo: .., bar: ... } - not yet populated
+
+// Module completion is tracked separately via topLevelCapability,
+// so it's what you await to finish evaluation of the module.
+await mod.topLevelCapability;
+mod.namespace();  // { foo: 'foo', bar: 'barasync-root' }
+```
+
+#### 1.b. Synchronous require(esm) pattern
+
+See [#59656](https://github.com/nodejs/node/issues/59656) for this use case.
+
+```js
+const [mod] = loader.getModules([{ specifier: 'sync-root' }], context);
+
+mod.evaluate();  // returns undefined or throws for any loader errors.
+
+mod.hasTopLevelAwait();  // false
+mod.hasAsyncGraph();  // false
+mod.topLevelCapability;  // Always fulfilled for non-TLA modules.
+mod.error;  // If the module threw during evaluation, the error is here.
+mod.namespace();  // { foo: 'foo', baz: 'barsync-root' }
+```
+
+### 2. Partial customization and registering globally
+
+A loader can delegate to the base class for specifiers it doesn't need to customize, and can be registered for a context so that all **ESM** running in that context (including `vm.Script` dynamic `import()`s) uses it.
+
+```js
+import { SourceTextModuleLoader, SyntheticModule } from 'vm/modules';
+import { createContext, runInContext } from 'node:vm';
+
+class CustomLoader extends SourceTextModuleLoader {
+  getModules(requests, context, parent) {
+    return requests.map((req) => {
+      if (req.attributes?.type === 'foo') {
+        return new SyntheticModule(['foo'], function() {
+          this.setExport('foo', 'foo');
+        }, { context });
+      }
+      return super.getModules([req], context, parent)[0];
+    });
+  }
+  // Other methods are left to the default.
+}
+
+const loader = new CustomLoader();
+
+// Register the loader for a vm context.
+// Only one loader can be registered per context.
+loader.register(context);
+
+console.log(
+  await runInContext(
+    `import('foo', { with: { type: 'foo' } })`,
+    context
+  )
+);  // { foo: 'foo' }
+
+// Unregister when done.
+loader.deregister(context);
+
+// Register for the main context.
+loader.register();
+console.log(await import('foo', { with: { type: 'foo' } }));
+```
+
+## Design details
+
+### Error model: loader errors vs. module errors
+
+See [#60242](https://github.com/nodejs/node/issues/60242) for background.
+
+In the current API, `evaluate()` wraps all errors (status errors, timeout, and actual module exceptions) into a single promise rejection. This makes it difficult to distinguish errors from the loader (implemented by e.g. a framework) from module-level errors (thrown from e.g. user-provided code being tested by a framework), and makes re-implementation of `require(esm)` awkward.
+
+In the new API, `evaluate()` separates the two:
+
+- Synchronous throws for loader/infrastructure errors: wrong module status, timeout (`ERR_SCRIPT_EXECUTION_TIMEOUT`), signal interruption (`ERR_SCRIPT_EXECUTION_INTERRUPTED`).
+- Use `module.topLevelCapability` (maps to `CyclicModuleRecord.[[TopLevelCapability]]` in the spec) to access evaluation resolution or rejections
+- Use `module.error` to access `CyclicModuleRecord.[[EvaluationError]]` once it's evaluated.
+
+### Source phase imports
+
+Module requests carry phase information (`request.phase`). For source-phase static imports (`import source x from 'y'`), the module returned from `getModules()` must have a source object set via `mod.setSourceObject(obj)`. For dynamic source-phase imports (`import.source('y')`), `dynamicImport()` receives `request.phase === 'source'` and should return the source object (e.g., a `WebAssembly.Module`) instead of a namespace.
+
+```js
+dynamicImport(request, context, parent) {
+  const mod = this.helperGetSingleModule(request, context, parent);
+  if (request.phase === 'source') {
+    return mod.sourceObject;
+  }
+  mod.evaluate();
+  return mod.namespace();
+}
+```
+
+TODO: figure out what to do for deferred imports, but it'll be a phase as well.
+
+### One loader per context
+
+When a loader is registered for a context, it handles dynamic `import()` for all code evaluated in that context, including `vm.Script`. With the new design, omitting `importModuleDynamically` from a `vm.Script` should mean ""delegate to the context's registered loader if any, otherwise throw."" This makes `loader.register(context)` a single point of configuration for all ESM loading in a given context.
+
+The new `dynamicImport(request, context, parent)` callback receives the context as a parameter, so it can construct modules in the right context. This addresses the issue where `importModuleDynamically` for `vm.Script` didn't have context information ([#35714](https://github.com/nodejs/node/issues/35714)).
+
+`loader.register(context)` throws if a loader is already registered for that context. For users who want hooks-style middleware composition, `module.registerHooks(hooks, context)` is still a a separate, orthogonal mechanism that allow nesting, and it runs in a lower layer underneath the loader's `getModules()`/`dynamicImport()`.
+
+### Different level of customizations
+
+See [#31234](https://github.com/nodejs/node/issues/31234), [#35848](https://github.com/nodejs/node/issues/35848), [#43899](https://github.com/nodejs/node/issues/43899) [#61127](https://github.com/nodejs/node/issues/61127).
+
+The base `SourceTextModuleLoader` needs a meaningful default `getModules()` implementation for partial customization to work. The plan is to expose Node's built-in resolution and loading as composable functions (someting like `module.resolve(specifier, parentURL, context)` and `module.load(url, context)`) that the base `getModules()` use (see https://github.com/nodejs/node/pull/55756). This way:
+
+- Partial customizers call `super.getModules()` for requests they don't handle.
+- Advanced users can call `module.resolve` / `module.load` directly to implement their `getModules()` override, these in turn runs the hooks registered by `module.registerHooks()` and/or the built-in resolution/loading logic, so the hooks and the loader are composable in a flexible way.
+
+",open,['loaders'],joyeecheung,9,2026-04-13 16:48:33+00:00,,UNKNOWN,15036,False,True,Performance,65,,False
+nodejs/node,4244598992,`fetch()` fails with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY` while curl and openssl validate the same HTTPS endpoint,"### Version
+
+24.13.1
+
+### Platform
+
+```text
+Linux KContainer 5.10.0-12-amd64 #1 SMP Debian 5.10.103-1 (2022-03-07) x86_64 x86_64 x86_64 GNU/Linux
+```
+
+### Subsystem
+
+_No response_
+
+### What steps will reproduce the bug?
+
+Hi,
+
+I would like to report a behavior in Node that can be reproduced using the below PoC:
+```javascript
+const req = new Request(""https://example.org"");
+
+const init = {
+  method: ""GET"",
+};
+
+req.headers.set(""foo"", ""bar"");
+
+const res = await fetch(req, init);
+
+console.log(""Status:"", res.status);
+```
+
+
+### How often does it reproduce? Is there a required condition?
+
+No specific condition
+
+### What is the expected behavior? Why is that the expected behavior?
+
+Works in Deno and Bun
+```
+root@KContainer:~/10396# deno run -A main.mjs
+Status: 200
+root@KContainer:~/10396# bun run main.mjs
+Status: 200
+```
+
+Using curl works
+```
+root@KContainer:~/10396# curl -v https://example.org
+*   Trying 104.20.26.136:443...
+* Connected to example.org (104.20.26.136) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+*  CAfile: /etc/ssl/certs/ca-certificates.crt
+*  CApath: /etc/ssl/certs
+* TLSv1.0 (OUT), TLS header, Certificate Status (22):
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS header, Certificate Status (22):
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS header, Finished (20):
+* TLSv1.2 (IN), TLS header, Supplemental data (23):
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+* TLSv1.2 (OUT), TLS header, Finished (20):
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS header, Supplemental data (23):
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* ALPN, server accepted to use h2
+```
+
+
+### What do you see instead?
+
+Fetch fails due to `UNABLE_TO_GET_ISSUER_CERT_LOCALLY`
+```
+root@KContainer:~/10396# node main.mjs
+node:internal/deps/undici/undici:16416
+      Error.captureStackTrace(err);
+            ^
+
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:16416:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async file:///10396/main.mjs:9:13 {
+  [cause]: Error: unable to get local issuer certificate
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1649:34)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1094:8)
+      at ssl.onhandshakedone (node:internal/tls/wrap:880:12) {
+    code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+  }
+}
+
+Node.js v24.13.1
+```
+
+```
+root@KContainer:~/10396# node -e ""fetch('https://example.org').then(r=>console.log(r.status)).catch(console.error)""
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:16416:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  [cause]: Error: unable to get local issuer certificate
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1649:34)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1094:8)
+      at ssl.onhandshakedone (node:internal/tls/wrap:880:12) {
+    code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+  }
+}
+```
+
+### Additional information
+
+_No response_",closed,['tls'],kevgeoleo,7,2026-04-11 12:59:06+00:00,2026-04-13 10:16:38+00:00,UNKNOWN,3367,True,True,UI,90,1.0,False
+nodejs/node,4232839738,`wpt/test-wasm-jsapi` sometimes crashes on AIX,"### Test
+
+wpt/test-wasm-jsapi
+
+### Platform
+
+AIX
+
+### Console output
+
+```console
+21:53:20 ok 5280 wpt/test-user-timing # TODO : Fix flaky test
+21:53:20   ---
+21:53:20   duration_ms: 917.03200
+21:53:20   ...
+21:53:21 not ok 5281 wpt/test-wasm-jsapi
+21:53:21   ---
+21:53:21   duration_ms: 1557.51600
+21:53:21   severity: crashed
+21:53:21   exitcode: -5
+21:53:21   stack: |-
+21:53:21     [SKIPPED] esm-integration/global-exports-live-bindings.tentative.any.js: Live bindings unsupported pending V8 WebAssemblyModuleRecord
+...
+21:53:22     [PASS] basic 4
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     (node:29032854) ExperimentalWarning: vm.USE_MAIN_CONTEXT_DEFAULT_LOADER is an experimental feature and might change at any time
+21:53:22     (Use `node --trace-warnings ...` to show where the warning was created)
+21:53:22     (node:29032854) ExperimentalWarning: Importing WebAssembly module instances is an experimental feature and might change at any time
+21:53:22     
+21:53:22     
+21:53:22     #
+21:53:22     # Fatal error in , line 0
+21:53:22     # Check failed: ptr == address.
+21:53:22     #
+21:53:22     #
+21:53:22     #
+21:53:22     #FailureMessage Object: 1135e9ad0
+21:53:22     ----- Native stack trace -----
+21:53:22     
+21:53:22   ...
+...
+
+21:53:52 Failed tests:
+21:53:52 out/Release/node --experimental-wasm-modules /home/iojs/build/workspace/node-test-commit-aix/nodes/aix72-power9/test/wpt/test-wasm-jsapi.mjs
+21:53:52 gmake[1]: *** [Makefile:619: test-ci] Error 1
+```
+
+### Build links
+
+- https://ci.nodejs.org/job/node-test-commit-aix/nodes=aix72-power9/61914/console
+- https://ci.nodejs.org/job/node-test-commit-aix/nodes=aix72-power9/61967/console
+- https://ci.nodejs.org/job/node-test-commit-aix/nodes=aix72-power9/61997/console
+
+### Additional information
+
+We suspect it is the same check/comment https://github.com/nodejs/node/blob/5b6091ce31068e1c86f863273cdd397ecb47e3b7/deps/v8/src/base/platform/platform-aix.cc#L194-L199 as referenced in https://github.com/nodejs/node/pull/62470.",open,"['aix', 'flaky-test']",richardlau,8,2026-04-09 14:10:20+00:00,,UNKNOWN,5106,False,False,Crash,50,,False
+nodejs/node,4229448433,Build failure on RISC-V64 in Node.js v24.14.0,"Hi,
+
+I am encountering a compilation failure when building Node.js v24.14.0 natively on RISC-V64.
+The build breaks in deps/v8/src/json/json-stringifier.cc. The FastJsonStringifier requests a 16-lane vector, but on RISC-V64 without the V-extension, Highway falls back to a strict 1-lane scalar implementation, causing template deduction to fail.
+
+Error:-
+../deps/v8/src/json/json-stringifier.cc:3356:33: error: no matching function for call to ‘Set(hwy::N_SCALAR::FixedTag<unsigned char, 16>&, int)’
+3356 | const auto mask_0x20 = hw::Set(tag, 0x20);
+| ~~~~~~~^~~~~~~~~~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:116:17: note: candidate: ‘template<class D, hwy::EnableIf<(D::kPrivateLanes == 1)>* , class T, class T2> hwy::N_SCALAR::Vec1 hwy::N_SCALAR::Set(D, T2)’
+116 | HWY_API Vec1 Set(D /* tag /, const T2 t) {
+| ^~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:116:17: note: template argument deduction/substitution failed:
+../deps/v8/src/json/json-stringifier.cc:3357:33: error: no matching function for call to ‘Set(hwy::N_SCALAR::FixedTag<unsigned char, 16>&, int)’
+3357 | const auto mask_0x22 = hw::Set(tag, 0x22);
+| ~~~~~~~^~~~~~~~~~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:116:17: note: candidate: ‘template<class D, hwy::EnableIf<(D::kPrivateLanes == 1)> , class T, class T2> hwy::N_SCALAR::Vec1 hwy::N_SCALAR::Set(D, T2)’
+116 | HWY_API Vec1 Set(D /* tag /, const T2 t) {
+| ^~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:116:17: note: template argument deduction/substitution failed:
+../deps/v8/src/json/json-stringifier.cc:3358:33: error: no matching function for call to ‘Set(hwy::N_SCALAR::FixedTag<unsigned char, 16>&, int)’
+3358 | const auto mask_0x5c = hw::Set(tag, 0x5c);
+| ~~~~~~~^~~~~~~~~~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:116:17: note: candidate: ‘template<class D, hwy::EnableIf<(D::kPrivateLanes == 1)> , class T, class T2> hwy::N_SCALAR::Vec1 hwy::N_SCALAR::Set(D, T2)’
+116 | HWY_API Vec1 Set(D /* tag /, const T2 t) {
+| ^~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:116:17: note: template argument deduction/substitution failed:
+../deps/v8/src/json/json-stringifier.cc:3361:33: error: no matching function for call to ‘LoadU(hwy::N_SCALAR::FixedTag<unsigned char, 16>&, const unsigned char&)’
+3361 | const auto input = hw::LoadU(tag, block);
+| ~~~~~~~~~^~~~~~~~~~~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:1090:17: note: candidate: ‘template<class D, hwy::EnableIf<(D::kPrivateLanes == 1)>* , class T> hwy::N_SCALAR::Vec1 hwy::N_SCALAR::LoadU(D, const T*)’
+1090 | HWY_API Vec1 LoadU(D d, const T* HWY_RESTRICT p) {
+| ^~~~~
+../deps/v8/third_party/highway/src/hwy/ops/scalar-inl.h:1090:17: note: template argument deduction/substitution failed:
+make[1]: *** [tools/v8_gypfiles/v8_base_without_compiler.target.mk:1139: /home/user/node/out/Release/obj.target/v8_base_without_compiler/deps/v8/src/json/json-stringifier.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+rm c963181735d03de3bf99d3bc40db2e1e69f974c40ec0d109a7f24e14c00b737a.intermediate 68281cc6b5dfa4c0a2cf02421dc41eacecb50a2b11ce1ebe1f983bf22b2a6dbe.intermediate 6964f3c902231b8cdbd04ff5036cb56e7d1e1db774ad7dc13a467d17a2261f7f.intermediate
+make: *** [Makefile:143: node] Error 2
+
+Could smeone help me resolve this issue?
+
+",closed,[],SaitejaB31,6,2026-04-09 04:38:49+00:00,2026-04-21 06:07:23+00:00,UNKNOWN,3322,False,True,UI,65,12.0,False
+nodejs/node,4207234295,JSON Schema validation in Node.js core,"### What is the problem this feature will solve?
+
+Hi all,
+
+I wanted to open a discussion about whether JSON Schema validation could be a useful addition to Node.js core.
+
+## Current state
+
+- Node.js currently has no built-in JSON Schema validation
+- `node.config.json` (experimental) uses hand-written type checking against a JSON Schema 2020-12 definition generated from C++ option metadata
+- `package.json` parsing uses simdjson but has no schema validation, fields are extracted structurally
+- The only schema validation in the Node.js tree lives inside `deps/npm` (Ajv)
+
+## Potential use cases
+
+- Validate `node.config.json` against its own schema properly
+- Future validation for `package.json` fields (opt-in, non-breaking)
+- Expose as a built-in module (`node:jsonschema`) so userland doesn't need to pull in external validators
+
+## Context
+
+I've been working on a project in this area, [ata-validator](https://github.com/ata-core/ata-validator), a JSON Schema validator built on simdjson and RE2. It currently passes 96.9% of the official JSON Schema Test Suite (Draft 2020-12) and falls back to a pure JS engine when native bindings aren't available.
+
+I'm not proposing to land it as-is, I'd love to hear from the group first:
+
+1. Is there interest in having JSON Schema validation available in core?
+2. What would be the most useful entry point? (config validation, public API, both?)
+3. Any concerns about the dependency story? (RE2/abseil weight, simdjson already in core)
+
+Happy to share benchmarks or more details if this sounds worth exploring.
+
+fyi @Qard 
+
+
+### What is the feature you are proposing to solve the problem?
+
+A built-in JSON Schema validator, potentially exposed as node:jsonschema, that could also be used internally for validating node.config.json and other configuration files.
+
+This would provide Node.js users with a fast, native JSON Schema (Draft 2020-12) validation capability without needing external dependencies.
+
+### What alternatives have you considered?
+
+- Continuing with hand-written validation for each config format individually,
+ doesn't scale as more config formats are added
+
+- Bundling an existing JS-based validator like Ajv into core, lacks native performance benefits
+
+- Leaving JSON Schema validation entirely to userland",open,['feature request'],mertcanaltin,16,2026-04-05 10:53:49+00:00,,UNKNOWN,2277,False,False,Performance,50,,False
+nodejs/node,4201637394,Requiring `Signed-off-by` moving forward,"As a heads up... [moving forward](https://github.com/nodejs/node/pull/62510), the project will require all contributors to explicitly sign-off on commits using the `Signed-off-by: Name <Email>` trailer in commits. This will be enforced by a new commit lint check.
+
+The use of `Signed-off-by` is an explicit acceptance of the [Developer Certificate of Origin (DCO)](https://github.com/nodejs/node/blob/main/CONTRIBUTING.md#developers-certificate-of-origin-11) that attests that you have the right to submit the code under the OSS license used by the project (MIT in our case).
+
+**Why now?**
+
+This is really something that we should have been doing all along.
+
+**How?**
+
+When you create a commit, use the `-s` flag, e.g. `git commit -s`. This will automatically add the `Signed-off-by` trailer in your commit message using your configured named and email address.
+
+**Guidelines**
+
+* The name and email used in the `Signed-off-by` trailer must match the name and email used in the commit author metadata. Use whatever name you want, but the email address must be a valid email.
+
+* Only people can sign off. The `Signed-off-by` trailer should not be added by bots or AI-agents. 
+
+* If a commit has multiple authors, there should be one `Signed-off-by` for each author. One of those must match the author metadata for the commit.
+
+* Backport commits, release commits, dependency updates, and WPT fixtures added by bots are exempt.
+
+**What about existing PRs**
+
+Existing PRs will likely need to be updated before they can land, as the new commit message lint rule will flag commits that do not have the `Signed-off-by` trailer. 
+
+**There may be rough edges**
+
+If the lint check flags your commits but you do not think the sign off should be necessary on that commit, add the `Signed-off-by` anyway and open an issue. We'll determine if the sign off is necessary or whether the lint rule needs to be adjusted.
+
+/cc @nodejs/tsc @nodejs/collaborators ",closed,['meta'],jasnell,50,2026-04-03 18:08:10+00:00,2026-04-23 05:04:32+00:00,UNKNOWN,1942,False,False,UI,50,19.0,False
+nodejs/node,4182662507,Add support for generating UUIDv7s,"### What is the problem this feature will solve?
+
+UUIDv7s are time-based UUIDs which can be helpful for sorting & database distribution. The standard is published here: https://datatracker.ietf.org/doc/html/rfc9562#name-uuid-version-7
+
+Postgres [recently shipped](https://www.postgresql.org/docs/current/functions-uuid.html) native support for UUIDv7 generation, and Bun [has a helper](https://bun.com/docs/guides/util/javascript-uuid) `Bun.randomUUIDv7();`
+
+Having to reach for a library in order to generate non-v4 UUIDs is a bummer and adds bloat for a very common workflow.
+
+### What is the feature you are proposing to solve the problem?
+
+I'm proposing UUIDv7 generation support be included in the Crypto module. 
+
+The actual API for this could either follow Bun's path of a separate method `.createRandomUUIDv7()`, or add in a property to the [existing](https://nodejs.org/api/crypto.html#cryptorandomuuidoptions) `createRandomUUID` `options` parameter such as `version`. These are not mutually exclusive, and you could imagine the parameter & method both existing for convenience.
+
+Examples:
+
+```js
+const {
+  createRandomUUIDv7,
+  createRandomUUID
+} = await import('node:crypto');
+
+createRandomUUIDv7();
+// => ""019d45ea-151f-780b-82a6-d097b39db62a""
+
+createRandomUUID({
+  version: ""v7""
+});
+// => ""019d45ea-fc8e-7792-bfa1-ae58916be0e3""
+```
+
+### What alternatives have you considered?
+
+_No response_",closed,"['crypto', 'feature request']",jreidgreer,6,2026-03-31 22:05:11+00:00,2026-04-05 10:12:24+00:00,UNKNOWN,1403,False,True,UI,65,4.0,False
+nodejs/node,4164898451,Add a label to note “this is good for CI”,"Currently, only approved PRs can trigger CI. However, this is unpractical because I often LGTM things to see what’s the state in CI (sorry, I’m lazy).
+
+Is it possible to improve our automation to know on which commit the request-ci label was applied to, and if this was applied by a collaborator, trust it?",closed,[],mcollina,6,2026-03-29 16:06:28+00:00,2026-03-31 16:39:09+00:00,UNKNOWN,306,False,False,Other,50,2.0,False
+nodejs/node,4137701522,[FR] Disable eval() usage by default,"### What is the problem this feature will solve?
+
+`eval() `and `Function() `in Node.js allow executing arbitrary code at runtime. While powerful, they are a common vector for security vulnerabilities and accidental code injection. Currently, `eval()` is enabled by default, which means that even minor mistakes or untrusted dependencies can execute code dynamically, increasing security risks.
+
+By disabling `eval()` by default, Node.js can provide a safer runtime out of the box. This change encourages developers to use safer alternatives such as vm or strict sandboxing, reducing potential attack surfaces in Node.js applications.
+
+As you can see in this [commit](https://github.com/midudev/preguntas-entrevista-react/commit/72c3e5a2684108db9af3fccbc4d09b2356c74e0d#diff-0a9670300d2139e7a1a7e37ace2536b0d0c890c7681dcaa12d3e410d72547f8e), you can somehow insert arbitrary code on a commit and not even notice.
+
+This [video](https://www.youtube.com/watch?v=ikdCG4goKIE) (in spanish, by @midudev), explains how they attacked him through this method. Is crazy
+
+### What is the feature you are proposing to solve the problem?
+
+Introduce a new opt-in flag --enable-eval in Node.js.
+- Default behavior: eval() and Function() are disabled in the runtime. Any attempt to use them without the flag will throw an error.
+- Opt-in: Users can explicitly enable eval() for legacy applications or specific use cases by passing `node --enable-eval index.js`
+- Benefits:
+
+- - Improves default security for Node.js applications.
+- - Prevents accidental dynamic code execution in production.
+- - Allows developers to consciously decide when they need eval().",closed,['feature request'],PR3C14D0,8,2026-03-25 18:47:07+00:00,2026-04-07 16:44:56+00:00,UNKNOWN,1641,False,False,Other,50,12.0,False
+nodejs/node,4132569492,Possible NodeJS 22.22.2 regression when installing latest NPM,"### Version
+
+v22.22.2
+
+### Platform
+
+```text
+Darwin M-FC6WJYY430 25.3.0 Darwin Kernel Version 25.3.0: Wed Jan 28 20:56:35 PST 2026; root:xnu-12377.91.3~2/RELEASE_ARM64_T6030 arm64
+```
+
+### Subsystem
+
+_No response_
+
+### What steps will reproduce the bug?
+
+```sh
+# use the latest node 22.x
+nvm install 22.22.2
+
+# activate the node version
+nvm use 22.22.2
+
+# install latest npm
+npm install -g npm@latest
+```
+
+### How often does it reproduce? Is there a required condition?
+
+Always happens.
+
+### What is the expected behavior? Why is that the expected behavior?
+
+NPM should install successfully.
+
+### What do you see instead?
+
+```
+npm error code MODULE_NOT_FOUND
+npm error Cannot find module 'promise-retry'
+npm error Require stack:
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/rebuild.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/index.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/index.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/node_modules/libnpmfund/lib/index.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/lib/utils/reify-output.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/lib/utils/reify-finish.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/lib/commands/install.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/lib/npm.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/lib/cli/entry.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/lib/cli.js
+npm error - /opt/hostedtoolcache/node/22.22.2/x64/lib/node_modules/npm/bin/npm-cli.js
+
+```
+
+### Additional information
+
+Created a minimal reproducible matrix of Node and NPM versions in https://github.com/altbdoor/node-22-npm-regress/actions/runs/23525843427/job/68478996014 .
+
+For brevity:
+
+| Node | NPM | Success? |
+| --- | --- | --- |
+| `22.22.1` | `^11.12.0`  | OK  |
+| `22.22.1` | `^11.11.0`  | OK  |
+| `22.22.1` | `latest`    | OK  |
+| `22.22.2` | `^11.12.0`  | NOK |
+| `22.22.2` | `^11.11.0`  | NOK |
+| `22.22.2` | `latest`    | NOK |
+
+Edit: seems to only happen from a new Node 22.22.2 environment, doing `npm install -g npm@latest`. Installing the versions in increment appears to be OK.
+
+```console
+$ npm i -g npm@^10
+
+changed 13 packages in 1s
+
+$ npm i -g npm@~11.10
+
+removed 48 packages, and changed 92 packages in 1s
+
+$ npm i -g npm@~11.11
+
+removed 1 package, and changed 26 packages in 902ms
+
+$ npm i -g npm@~11.12
+
+removed 7 packages, and changed 22 packages in 905ms
+
+$ npm i -g npm@latest
+
+changed 10 packages in 1s
+```",open,"['npm', 'v22.x']",altbdoor,12,2026-03-25 05:13:40+00:00,,UNKNOWN,2776,True,True,UI,90,,False
+flutter/flutter,4295362017,Provide warning when app's `minSdk` version is less than what Flutter supports,"### Edit from the flutter team:
+
+The issue here is that the app is using a [`minSdk`](https://developer.android.com/reference/tools/gradle-api/8.11/com/android/build/api/dsl/BaseFlavor#minSdk()) which is less than what flutter supports. I left [a comment below](https://github.com/flutter/flutter/issues/185278#issuecomment-4291558081) indicating what a fix for this issue would look like.
+
+### Original content of issue below:
+### Steps to reproduce
+
+I have no way to reproduce it. 
+here is the full [trace.txt](https://github.com/user-attachments/files/26894436/trace.txt).
+
+I can also provide you the guidance for Gemini insight on my crashlytics dashboard : 
+
+<img width=""1236"" height=""611"" alt=""Image"" src=""https://github.com/user-attachments/assets/a56207d8-d06a-47eb-977c-59b49559e5bb"" />
+
+<img width=""1233"" height=""861"" alt=""Image"" src=""https://github.com/user-attachments/assets/157f4b50-d47a-45f2-861a-38e55dd4ee75"" />
+
+<img width=""1216"" height=""383"" alt=""Image"" src=""https://github.com/user-attachments/assets/9782f102-8ff9-451a-abca-b3a5f753c138"" />
+
+And it seems it appeared on android 8 devices :  
+
+<img width=""1283"" height=""600"" alt=""Image"" src=""https://github.com/user-attachments/assets/6b9bf227-560b-442a-a28e-675ccf6bc6b4"" />
+
+### Expected results
+
+The app should not crash
+
+### Actual results
+
+The app is crashing
+
+### Code sample
+
+<details open><summary>Code sample</summary>
+
+```dart
+[Paste your code here]
+```
+
+</details>
+
+
+### Screenshots or Video
+
+<details open>
+<summary>Screenshots / Video demonstration</summary>
+
+[Upload media here]
+
+</details>
+
+
+### Logs
+
+<details open><summary>Logs</summary>
+
+```console
+          Fatal Exception: java.lang.NoSuchMethodError: No virtual method getLocales()Landroid/os/LocaleList; in class Landroid/content/res/Configuration; or its super classes (declaration of 'android.content.res.Configuration' appears in /system/framework/framework.jar)
+       at io.flutter.plugin.localization.LocalizationPlugin.sendLocalesToFlutter(LocalizationPlugin.java:144)
+       at io.flutter.embedding.engine.FlutterEngine.<init>(FlutterEngine.java:422)
+       at io.flutter.embedding.engine.FlutterEngineGroup.createEngine(FlutterEngineGroup.java:206)
+       at io.flutter.embedding.engine.FlutterEngineGroup.createAndRunEngine(FlutterEngineGroup.java:158)
+       at io.flutter.embedding.android.FlutterActivityAndFragmentDelegate.setUpFlutterEngine(FlutterActivityAndFragmentDelegate.java:339)
+       at io.flutter.embedding.android.FlutterActivityAndFragmentDelegate.onAttach(FlutterActivityAndFragmentDelegate.java:197)
+       at io.flutter.embedding.android.FlutterActivity.onCreate(FlutterActivity.java:645)
+       at android.app.Activity.performCreate(Activity.java:6351)
+       at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1114)
+       at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2470)
+       at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2577)
+       at android.app.ActivityThread.access$1000(ActivityThread.java:166)
+       at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1414)
+       at android.os.Handler.dispatchMessage(Handler.java:102)
+       at android.os.Looper.loop(Looper.java:148)
+       at android.app.ActivityThread.main(ActivityThread.java:5619)
+       at java.lang.reflect.Method.invoke(Method.java)
+       at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:853)
+       at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:737)
+        
+```
+
+</details>
+
+
+### Flutter Doctor output
+
+<details open><summary>Doctor output</summary>
+
+Not relevant today since the app is released and live on the store with an older version of flutter : `flutter: 3.41.2` 
+
+</details>
+",open,"['c: crash', 'platform-android', 'waiting for response', 'engine', 'good first issue', 'P2', 'team-android', 'triaged-android', 'triaged-engine']",Tom3652,12,2026-04-20 11:42:28+00:00,,UNKNOWN,3767,True,True,Crash,90,,False
+flutter/flutter,4293743172,TalkBack does not detect floating label text after entering value in TextFormField,"We are facing an accessibility issue in Flutter where TalkBack is not reading/detecting the floating label text once a value is entered in the TextFormField.
+
+Steps to Reproduce:
+
+- Add a TextFormField with a label (using labelText or similar).
+- Enable TalkBack on the Android device.
+- Focus on the input field.
+- Enter a value into the field.
+- Observe TalkBack behavior.
+
+Expected Behavior:
+TalkBack should announce the label text consistently, even after the user enters a value and the label transitions (floats above the field).
+
+Actual Behavior:
+
+TalkBack does not read or detect the floating label after entering input.
+The label becomes inaccessible once the field has a value.
+This leads to accessibility compliance issues (e.g., WCAG / ADA).
+
+What We Tried:
+
+Set label to always visible.
+Placed label above the TextFormField manually.
+Merged semantics using Semantics widget.
+Ensured proper UI implementation as per documentation.
+
+Despite these efforts, the issue still persists.
+
+Environment:
+
+Flutter version: 3.38.3
+Android version: Any
+Device: Any
+
+Scan report: https://app-accessibility.browserstack.com/public_report?token=tok_acqAs3ywzgS4W1SRcNJCPg%E2%80%942026-04-20+06%3A15%3A17+UTC",open,"['a: text input', 'platform-android', 'a: accessibility', 'has reproducible steps', 'P2', 'triaged-android', 'fyi-android', 'team-accessibility', 'triaged-accessibility']",pdesai-i3v,8,2026-04-20 07:06:11+00:00,,UNKNOWN,1204,True,False,UI,75,,False
+flutter/flutter,4291738357,"Adding android:enableOnBackInvokedCallback=""true"" causes predictive back to break on some OEM Android 14 devices (e.g. OnePlus)","### Reproduction matrix
+
+- OnePlus phone (OnePlus8T), Android 14: reproducible
+- Official Android 14 emulator: not reproducible
+- Default Flutter-generated manifest: not reproducible
+- Same app with `android:enableOnBackInvokedCallback=""true""`: reproducible on affected device
+
+### Steps to reproduce
+
+1. Create a new Flutter app with `flutter create bug`.
+2. Replace `lib/main.dart` with the minimal sample below.
+3. Run the app on a physical OnePlus device running Android 14.
+4. Verify that the app behaves normally with the default Flutter-generated manifest.
+5. Add `android:enableOnBackInvokedCallback=""true""` to the `<application>` tag in `android/app/src/main/AndroidManifest.xml`.
+6. Rebuild and run the same app on the same OnePlus device.
+7. Navigate to the second page.
+8. Perform the predictive back gesture.
+9. Observe that the page becomes unresponsive / back behavior breaks.
+
+I cannot reproduce this issue on the official Android 14 emulator; so far I can only reproduce it on some OEM devices such as OnePlus phones.
+
+### Expected results
+
+The app should continue to handle back navigation correctly after enabling predictive back through `android:enableOnBackInvokedCallback=""true""`. Enabling this documented configuration should not make the page unresponsive or break route popping.
+
+### Actual results
+
+With the default Flutter-generated manifest, I cannot reproduce the issue on the same device. After explicitly adding `android:enableOnBackInvokedCallback=""true""`, the issue reproduces consistently on my OnePlus Android 14 device.
+
+I cannot reproduce the issue on the official Android 14 emulator.
+
+### Code sample
+
+<details open><summary>This sample is based on a fresh `flutter create bug` project. The only relevant non-Dart change is adding `android:enableOnBackInvokedCallback=""true""` to the application tag in `AndroidManifest.xml`.</summary>
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const DemoApp());
+}
+
+class DemoApp extends StatelessWidget {
+  const DemoApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+          },
+        ),
+      ),
+      home: const FirstPage(),
+    );
+  }
+}
+
+class FirstPage extends StatelessWidget {
+  const FirstPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.orange,
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const SecondPage(),
+              ),
+            );
+          },
+          child: const Text('Open next page'),
+        ),
+      ),
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  const SecondPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Colors.blue,
+      body: Center(
+        child: Text(
+          'Second Page\nUse edge-swipe back',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+
+
+</details>
+
+
+### Screenshots or Video
+
+
+
+
+
+<details open>
+<summary>Normal behavior</summary>
+
+https://github.com/user-attachments/assets/78c954e3-0ed1-4f06-aa3e-7000d061dc39
+
+</details>
+
+
+<details open>
+<summary>`android:enableOnBackInvokedCallback=""true""`</summary>
+
+https://github.com/user-attachments/assets/ad23245e-47d6-47ac-a67b-c00db062d2a5
+
+</details>
+
+
+
+### Flutter Doctor output
+
+<details open><summary>Doctor output</summary>
+
+```console
+[√] Flutter (Channel stable, 3.41.7, on Microsoft Windows [Version 10.0.26200.8246], locale en-US) [268ms]
+    • Flutter version 3.41.7 on channel stable at C:\Users\zhoud\Documents\flutter\flutter
+    • Upstream repository https://github.com/flutter/flutter.git
+    • Framework revision cc0734ac71 (4 days ago), 2026-04-15 21:21:08 -0700
+    • Engine revision 59aa584fdf
+    • Dart version 3.11.5
+    • DevTools version 2.54.2
+    • Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-native-assets, omit-legacy-version-file, enable-lldb-debugging,
+      enable-uiscene-migration
+
+[√] Windows Version (11 Pro 64-bit, 25H2, 2009) [1,425ms]
+
+[√] Android toolchain - develop for Android devices (Android SDK version 37.0.0) [2.8s]
+    • Android SDK at C:\Users\zhoud\AppData\Local\Android\sdk
+    • Emulator version 36.4.10.0 (build_id 15004761) (CL:N/A)
+    • Platform android-37.0, build-tools 37.0.0
+    • Java binary at: C:\Program Files\Android\Android Studio\jbr\bin\java
+      This is the JDK bundled with the latest Android Studio installation on this machine.
+      To manually set the JDK path, use: `flutter config --jdk-dir=""path/to/jdk""`.
+    • Java version OpenJDK Runtime Environment (build 21.0.8+-14196175-b1038.72)
+    • All Android licenses accepted.
+
+[√] Chrome - develop for the web [13ms]
+    • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[X] Visual Studio - develop Windows apps [12ms]
+    X Visual Studio not installed; this is necessary to develop Windows apps.
+      Download at https://visualstudio.microsoft.com/downloads/.
+      Please install the ""Desktop development with C++"" workload, including all of its default components
+
+[√] Connected device (4 available) [480ms]
+    • KB2005 (mobile)   • 18a789b9 • android-arm64  • Android 14 (API 34)
+    • Windows (desktop) • windows  • windows-x64    • Microsoft Windows [Version 10.0.26200.8246]
+    • Chrome (web)      • chrome   • web-javascript • Google Chrome 147.0.7727.56
+    • Edge (web)        • edge     • web-javascript • Microsoft Edge 147.0.3912.72
+
+[√] Network resources [281ms]
+    • All expected network resources are available.
+```
+
+</details>
+",open,"['platform-android', 'f: material design', 'f: routes', 'has reproducible steps', 'P1', 'team-android', 'triaged-android']",Matrix9494,16,2026-04-19 19:04:51+00:00,,UNKNOWN,6130,True,True,UI,90,,False
+flutter/flutter,4278380885,[google_maps_flutter][web] Use of the parameter `style` has no effect on the Map on the Web platform,"### Steps to reproduce
+
+1. Install Latest version of `google_maps_flutter: ^2.17.0` 
+
+2. Pass a Custom Style String representing anything like dark mode for example 
+
+```dart
+const String mapStyleDefaultDarkMode = """"""[
+  {
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#242f3e""
+      }
+    ]
+  },
+  {
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#746855""
+      }
+    ]
+  },
+  {
+    ""elementType"": ""labels.text.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#242f3e""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""administrative.locality"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#d59563""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""poi"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#d59563""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""poi.park"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#263c3f""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""poi.park"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#6b9a76""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#38414e""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road"",
+    ""elementType"": ""geometry.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#212a37""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#9ca5b3""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road.highway"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#746855""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road.highway"",
+    ""elementType"": ""geometry.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#1f2835""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road.highway"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#f3d19c""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""transit"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#2f3948""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""transit.station"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#d59563""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""water"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#17263c""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""water"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#515c6d""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""water"",
+    ""elementType"": ""labels.text.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#17263c""
+      }
+    ]
+  }
+]"""""";
+```
+3. Pass the style to the Google Map Widget
+
+```dart
+GoogleMap(
+  style: mapStyleDefaultDarkMode 
+)
+```
+4. Run web compilation and the map will still show in the default colors 
+
+### Expected results
+
+Running The Compilation will show the map in dark mode style on all platforms 
+
+### Actual results
+
+Running the app on android for example, behaves as expected the map is shown with the Dark Colors Style given the style String
+But running the same code on the web shows the map with the default colors 
+
+### Code sample
+
+<details open><summary>Code sample</summary>
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter BUG',
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      home: const MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  static const String mapStyleDefaultDarkMode = """"""[
+  {
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#242f3e""
+      }
+    ]
+  },
+  {
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#746855""
+      }
+    ]
+  },
+  {
+    ""elementType"": ""labels.text.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#242f3e""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""administrative.locality"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#d59563""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""poi"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#d59563""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""poi.park"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#263c3f""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""poi.park"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#6b9a76""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#38414e""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road"",
+    ""elementType"": ""geometry.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#212a37""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#9ca5b3""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road.highway"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#746855""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road.highway"",
+    ""elementType"": ""geometry.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#1f2835""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""road.highway"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#f3d19c""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""transit"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#2f3948""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""transit.station"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#d59563""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""water"",
+    ""elementType"": ""geometry"",
+    ""stylers"": [
+      {
+        ""color"": ""#17263c""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""water"",
+    ""elementType"": ""labels.text.fill"",
+    ""stylers"": [
+      {
+        ""color"": ""#515c6d""
+      }
+    ]
+  },
+  {
+    ""featureType"": ""water"",
+    ""elementType"": ""labels.text.stroke"",
+    ""stylers"": [
+      {
+        ""color"": ""#17263c""
+      }
+    ]
+  }
+]"""""";
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: GoogleMap(
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(37.42796133580664, -122.085749655962),
+          zoom: 10,
+        ),
+        style: mapStyleDefaultDarkMode,
+      ),
+    );
+  }
+}
+
+```
+
+</details>
+
+
+### Screenshots or Video
+
+<details open>
+<summary>Screenshots / Video demonstration</summary>
+
+[Upload media here]
+
+</details>
+
+
+### Logs
+
+<details open><summary>Logs</summary>
+
+```console
+[Paste your logs here]
+```
+
+</details>
+
+
+### Flutter Doctor output
+
+<details open><summary>Doctor output</summary>
+
+```console
+flutter doctor
+ in pwsh at 21:37:12
+Doctor summary (to see all details, run flutter doctor -v):
+[√] Flutter (Channel stable, 3.41.6, on Microsoft Windows [Version
+    10.0.19045.6466], locale es-VE)
+[√] Windows Version (10 Home 64-bit, 22H2, 2009)
+[√] Android toolchain - develop for Android devices (Android SDK version
+    36.1.0)
+[√] Chrome - develop for the web
+[√] Visual Studio - develop Windows apps (Visual Studio Community 2022
+    17.14.6 (June 2025))
+[√] Connected device (3 available)
+[√] Network resources
+
+• No issues found!
+```
+
+</details>
+",open,"['c: regression', 'p: maps', 'platform-web', 'team-ecosystem', 'has reproducible steps', 'P1', 'triaged-ecosystem', 'fyi-web']",LuisReyes98,7,2026-04-16 20:33:54+00:00,,UNKNOWN,7816,True,True,UI,90,,False
+flutter/flutter,4277040842,Dart vm-service GetStack method can deadlock by trying to lock the same MessageHandler monitor recursively,"
+### Description
+
+With merged UI and platform threads enabled (the default on macOS), a Flutter app intermittently deadlocks permanently on startup in debug mode. The main thread freezes in the Dart VM's safepoint handler, rendering the app and the VM service completely unresponsive.
+
+The trigger: a macOS `didChangeOcclusionState` notification fires on the main thread while the Dart VM has an active safepoint operation in progress (initiated by the VM debugger service). Because the UI and platform threads are merged, the notification handler executes `Dart_EnterIsolate` inline via `RunNowAndFlushMessages`, which blocks in `SafepointHandler::ExitSafepointLocked` waiting for the safepoint to complete. The safepoint itself is deadlocked among DartWorker threads (details below), so the main thread blocks forever.
+
+### Steps to reproduce
+
+This is timing-dependent and **debug-mode only** (the `kCheckForReload` OOB message path in `HandleLibMessage` is compiled out in PRODUCT builds). It reproduces in apps that:
+1. Spawn multiple isolates during startup (e.g., for a database connection pool) — this creates concurrent DartWorker thread activity
+2. Run in debug mode with the debugger/VM service attached (`flutter run` or IDE)
+3. Use merged threads (the default on macOS since Flutter 3.33)
+
+GC cannot trigger the same deadlock — `ConcurrentMarkTask` uses `bypass_safepoint=true`, and finalization messages bypass `PortMap::mutex_`.
+
+In our app (SQLite wrapper with FFI, 5 isolates), the deadlock occurs roughly 1 in 5 cold launches in debug mode.
+
+**To diagnose a deadlocked instance:** `sample <pid> 1 -mayDie` and look for `SafepointHandler` in the thread stacks.
+
+### Root cause analysis
+
+Thread sampling (`sample <pid> 1 -mayDie`) reveals two layers:
+
+#### Layer 1: VM service deadlock among DartWorker threads
+
+A VM debugger thread (Thread 40797897) requests a `kGCAndDeoptAndReload` safepoint to set a breakpoint via `Debugger::RunWithStoppedDeoptimizedWorld` (which uses `RELOAD_OPERATION_SCOPE`). This sends `kCheckForReload` OOB messages to all isolates and waits for all threads to reach safepoint level `kGCAndDeoptAndReload`. However, Thread 40797896 (handling a `GetStack` VM service request) is blocked trying to `PostMessage` and cannot reach a safepoint checkpoint. Multiple other DartWorker threads are also stuck — some processing the `kCheckForReload` message in `HandleLibMessage` → `BlockForSafepoint`, some blocked on `PortMap::mutex_` (held by Thread 40797896).
+
+Key stacks:
+
+```
+Thread 40797897 (safepoint owner — debugger breakpoint):
+  Debugger::SetBreakpointAtLineCol → RunWithStoppedDeoptimizedWorld
+    → SafepointOperationScope(kGCAndDeoptAndReload) → SafepointThreads
+      → WaitUntilThreadsReachedSafepointLevel ← BLOCKED
+
+Thread 40797896 (can't reach safepoint — handling GetStack):
+  Service::InvokeMethod → GetStack → MessageQueue::PrintJSON
+    → Compiler::CompileFunction → NoReloadScope::~NoReloadScope
+      → SendInternalLibMessage → PortMap::PostMessage (+180, holds PortMap::mutex_)
+        → MessageHandler::PostMessage
+          → _pthread_mutex_firstfit_lock_slow ← BLOCKED on a MessageHandler monitor
+
+Threads 40797893/94 (blocked on safepoint):
+  MessageHandler::HandleMessages → HandleMessage → HandleLibMessage
+    → BlockForSafepoint → ExitSafepointLocked ← BLOCKED (Note: HandleMessages
+      releases MessageHandler::monitor_ before calling HandleMessage)
+
+Threads 40799860/61 (GC markers, blocked on PortMap::mutex_):
+  ConcurrentMarkTask::Run → PortMap::PostMessage
+    → _pthread_mutex_firstfit_lock_slow ← BLOCKED (PortMap::mutex_ held by 40797896)
+
+Thread 40797645 (dart:io EventHandler, blocked on PortMap::mutex_):
+  PostCObjectHelper → PortMap::PostMessage
+    → _pthread_mutex_firstfit_lock_slow ← BLOCKED
+```
+
+**Notes on lock state:**
+- `HandleMessages` explicitly releases `MessageHandler::monitor_` (via `ml->Exit()`) before calling `HandleMessage`, with an inline comment documenting this is intentional to avoid deadlocks. Threads 40797893/94 do NOT hold the monitor during `BlockForSafepoint`.
+- Thread 40797896 holds `PortMap::mutex_` (confirmed: `PortMap::PostMessage` holds `PortMap::mutex_` via RAII `Locker` for the entire call including `handler->PostMessage()`). The `PortMap::mutex_` contention blocks the GC markers, dart:io EventHandler, and any other `PortMap::PostMessage` callers.
+- Thread 40797896 is blocked on `MessageHandler::PostMessage` → `MonitorLocker ml(&monitor_)` — trying to acquire the target MessageHandler's monitor. The exact holder of this monitor could not be identified from the thread sample alone. The target appears to be Thread 40797896's own isolate's handler (via `NoReloadScope::~NoReloadScope` → `SendInternalLibMessage` to `isolate_->main_port()`), whose monitor was released by `HandleMessages` in step 5 above. This may indicate a subtlety in the `Monitor`/`pthread_mutex` interaction under high contention, or a holder not visible in the `sample` output.
+
+#### Layer 2: Main thread pulled into the deadlock (Flutter engine)
+
+While the VM service deadlock is in progress, a macOS `didChangeOcclusionState` notification fires on the merged UI/platform thread:
+
+```
+Main thread:
+  __CFRunLoopDoBlocks → CGSDatagramReadStream::dispatchMainQueueDatagrams
+    → -[FlutterAppLifecycleRegistrar handleDidChangeOcclusionState:]
+      → -[FlutterEngine setApplicationState:]
+        → FlutterEngineSendPlatformMessage
+          → Shell::OnPlatformViewDispatchPlatformMessage
+            → RunNowAndFlushMessages ← runs inline because merged threads
+              → Dart_EnterIsolate → Thread::EnterIsolate → ExitSafepoint
+                → SafepointHandler::ExitSafepointLocked
+                  → _pthread_cond_wait ← BLOCKED FOREVER
+```
+
+The lifecycle handler calls `sendOnChannel:` synchronously from the NSNotification callback. `RunNowAndFlushMessages` detects it's on the UI thread (merged mode) and runs inline, calling `Dart_EnterIsolate`. `Dart_EnterIsolate` → `Thread::EnterIsolate` → `ExitSafepoint` blocks because the VM service safepoint is in progress and deadlocked.
+
+There is **no reentrancy guard** in the lifecycle handler chain (`FlutterAppLifecycleRegistrar`, `FlutterEngine.setApplicationState:`, or `Shell::OnPlatformViewDispatchPlatformMessage`).
+
+### Expected results
+
+The app starts normally in debug mode.
+
+### Actual results
+
+The app deadlocks permanently. Black screen, no UI renders, no Dart code executes. The VM service is unresponsive (HTTP requests time out). Force-kill is the only recovery.
+
+### Workaround
+
+Disabling merged threads prevents the main thread from being pulled into the VM service deadlock:
+
+```xml
+<!-- macos/Runner/Info.plist -->
+<key>FLTEnableMergedPlatformUIThread</key>
+<false/>
+```
+
+Without merged threads, the VM service deadlock may still occur between DartWorker threads (debugger would hang), but the app UI remains responsive.
+
+### Suggested fix
+
+**Flutter engine (prevents the main thread freeze):**
+
+The lifecycle notification handler should not synchronously call `Dart_EnterIsolate` on the merged thread. `RunNowAndFlushMessages` should use `PostTask` instead of inline execution for lifecycle messages, deferring the dispatch to the next event loop iteration:
+
+```objc
+// In FlutterEngine.mm, setApplicationState: or handleDidChangeOcclusionState:
+// Option A: dispatch_async to defer out of the notification callback
+dispatch_async(dispatch_get_main_queue(), ^{
+    [self sendOnChannel:kFlutterLifecycleChannel message:...];
+});
+
+// Option B: modify RunNowAndFlushMessages to always PostTask for lifecycle
+```
+
+**Dart VM (fixes the underlying service deadlock):**
+
+The lock-ordering issue between the VM debugger's safepoint request and the VM service's `PostMessage` calls needs investigation by the VM team. Thread 40797896 holds `PortMap::mutex_` and is blocked on a `MessageHandler` monitor while unable to reach a safepoint, preventing the debugger's safepoint from completing. The full thread sample is provided below for analysis.
+
+### Full thread sample
+
+<details>
+<summary>Complete thread stacks from deadlocked process</summary>
+
+```
+844 Thread_40797598   DispatchQueue_1: com.apple.main-thread  (serial)
++ 844 NSApplicationMain → -[NSApplication run] → __CFRunLoopRun
++   844 __CFRunLoopDoBlocks → __CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__
++     844 CGSDatagramReadStream::dispatchMainQueueDatagrams  (in SkyLight) + 284
++       844 (anonymous namespace)::notify_datagram_handler  (in SkyLight) + 928
++         844 -[FlutterAppLifecycleRegistrar handleDidChangeOcclusionState:]  (in FlutterMacOS) + 236
++           844 -[FlutterEngine setApplicationState:]  + 140
++             844 -[FlutterEngine sendOnChannel:message:binaryReply:]  + 280
++               844 FlutterEngineSendPlatformMessage  + 456
++                 844 flutter::Shell::OnPlatformViewDispatchPlatformMessage  + 400
++                   844 fml::TaskRunner::RunNowAndFlushMessages  + 80
++                     844 flutter::Engine::HandleLifecyclePlatformMessage  + 408
++                       844 flutter::RuntimeController::SetInitialLifecycleState  + 220
++                         844 flutter::PlatformConfiguration::UpdateInitialLifecycleState  + 100
++                           844 tonic::DartIsolateScope::DartIsolateScope  + 80
++                             844 Dart_EnterIsolate  + 100
++                               844 dart::Thread::EnterIsolate  + 140
++                                 844 dart::Thread::ExitSafepoint  + 140
++                                   844 dart::SafepointHandler::ExitSafepointLocked  + 232
++                                     844 _pthread_cond_wait
+
+844 Thread_40797893: DartWorker
++ 844 dart::MessageHandler::TaskCallback  + 196
++   844 dart::MessageHandler::HandleMessages  + 324
++     844 dart::IsolateMessageHandler::HandleMessage  + 764
++       844 dart::IsolateMessageHandler::HandleLibMessage  + 556
++         844 dart::SafepointHandler::BlockForSafepoint  + 320
++           844 dart::SafepointHandler::ExitSafepointLocked  + 232
++             844 _pthread_cond_wait
+
+844 Thread_40797894: DartWorker (same as 40797893)
++ 844 dart::MessageHandler::HandleMessages → HandleLibMessage
++   844 dart::SafepointHandler::BlockForSafepoint → ExitSafepointLocked
++     844 _pthread_cond_wait
+
+844 Thread_40797895: DartWorker
++ 844 dart::MessageHandler::HandleMessages → HandleMessage
++   844 dart::Service::InvokeMethod → JSONStream::PostReply
++     844 dart::SafepointHandler::ExitSafepointUsingLock → ExitSafepointLocked
++       844 _pthread_cond_wait
+
+844 Thread_40797896: DartWorker
++ 844 dart::MessageHandler::HandleMessages → HandleMessage
++   844 dart::Service::InvokeMethod → GetStack → MessageQueue::PrintJSON
++     844 dart::DartLibraryCalls::LookupHandler → Compiler::CompileFunction
++       844 dart::NoReloadScope::~NoReloadScope → SendInternalLibMessage
++         844 dart::PortMap::PostMessage  + 180 (holds PortMap::mutex_)
++           844 dart::MessageHandler::PostMessage  + 56
++             844 _pthread_mutex_firstfit_lock_slow
+
+844 Thread_40797897: DartWorker (SAFEPOINT OWNER)
++ 844 dart::MessageHandler::HandleMessages → HandleMessage
++   844 dart::Service::InvokeMethod → AddBreakpointCommon
++     844 dart::Debugger::SetBreakpointAtLineCol → RunWithStoppedDeoptimizedWorld
++       844 dart::SafepointOperationScope → SafepointHandler::SafepointThreads
++         844 WaitUntilThreadsReachedSafepointLevel
++           844 _pthread_cond_wait
+
+844 Thread_40799860: DartWorker (GC marker)
++ 844 dart::ConcurrentMarkTask::Run
++   844 dart::PortMap::PostMessage  + 60
++     844 _pthread_mutex_firstfit_lock_slow (waiting for PortMap::mutex_)
+
+844 Thread_40799861: DartWorker (GC marker, same as 40799860)
+
+844 Thread_40797645: dart:io EventHandler
++ 844 dart::PortMap::PostMessage  + 60
++   844 _pthread_mutex_firstfit_lock_slow (waiting for PortMap::mutex_)
+
+844 Thread_40797647: Dart Profiler SampleBlockProcessor
++ 844 dart::Thread::EnterIsolateGroupAsHelper → AddActiveThread
++   844 _pthread_cond_wait (waiting for safepoint to finish)
+```
+
+</details>
+
+### Environment
+
+```
+Flutter 3.41.1 • channel stable
+Framework • revision 582a0e7c55 (2026-02-12)
+Engine • revision cc8e596aa65130a0678cc59613ed1c5125184db4
+Tools • Dart 3.11.0 • DevTools 2.54.1
+```
+
+- macOS 26.2 (25C56), ARM64 (Apple Silicon)
+- Debug mode with debugger attached
+- Merged UI/platform thread enabled (default)
+
+### Related issues
+
+- #150525 — Merge the platform and UI threads (tracking issue)
+- #169339 — Flutter 3.32.0 threading issue — everything running in same thread
+- #94524 — [iOS] Platform-views Deadlock caused by thread merging (same class of bug, different trigger)",closed,"['engine', 'dependency: dart', 'P1', 'team-engine', 'triaged-engine']",danReynolds,11,2026-04-16 16:18:36+00:00,2026-04-22 07:04:11+00:00,UNKNOWN,12660,True,True,Performance,90,5.0,False
+flutter/flutter,4264311493,[firebase_messaging] onMessage stream never fires after UIScene migration on iOS — Messaging.messaging().delegate is nil after plugin registration via FlutterImplicitEngineDelegate,"After migrating a Flutter iOS app to use UISceneDelegation (via FlutterSceneDelegate in Info.plist), FirebaseMessaging.onMessage in Dart never fires for foreground messages. Background banners appear correctly via APNs, but the Dart layer receives nothing — no onMessage, no onMessageOpenedApp logs, and no getInitialMessage data.
+
+What works: 
+FCM token is generated and non-null
+Push notification banners appear when the app is backgrounded
+didRegisterForRemoteNotificationsWithDeviceToken fires correctly
+UNUserNotificationCenter willPresent fires correctly (confirmed via Swift print)
+Messaging.messaging().appDidReceiveMessage(userInfo) is called successfully from willPresent
+
+What breaks:
+FirebaseMessaging.onMessage never fires in Dart
+FirebaseMessaging.onMessageOpenedApp never fires in Dart
+No Dart-side logs appear for any incoming notification
+
+Root Cause (Diagnosed): When using FlutterImplicitEngineDelegate, plugins are registered via: `func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+    GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+}`, After GeneratedPluginRegistrant.register runs, FLTFirebaseMessagingPlugin is expected to set itself as Messaging.messaging().delegate. However, printing the delegate immediately after registration reveals: `print(Messaging.messaging().delegate) // → nil`
+
+This did not occur before the UIScene migration, when GeneratedPluginRegistrant.register(with: self) was called in didFinishLaunchingWithOptions and FlutterAppDelegate (which lives for the app's lifetime) held the plugins strongly.
+
+This is my appdelegate.swift file:
+```dart
+import Flutter
+import Firebase
+import UserNotifications
+import flutter_local_notifications
+@main
+@objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    FirebaseApp.configure()
+    UNUserNotificationCenter.current().delegate = self
+    let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+    UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { _, _ in }
+    application.registerForRemoteNotifications()
+//     GeneratedPluginRegistrant.register(with: self)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+  func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+  // This is required to make any communication available in the action isolate.
+      FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+          GeneratedPluginRegistrant.register(with: registry)
+      }
+      GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    }
+  override func application(_ application: UIApplication,
+                            didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+    Messaging.messaging().apnsToken = deviceToken
+//     print(""✅ APNs token: \(deviceToken.map { String(format: ""%02x"", $0) }.joined())"")
+    super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+  }
+//   override func application(_ application: UIApplication,
+//                             didReceiveRemoteNotification userInfo: [AnyHashable : Any],
+//                             fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//     Messaging.messaging().appDidReceiveMessage(userInfo)
+//     completionHandler(.newData)
+//   }
+}
+```
+
+And this is my info.plist file:
+```
+<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""[http://www.apple.com/DTDs/PropertyList-1.0.dtd"">](http://www.apple.com/DTDs/PropertyList-1.0.dtd%22%3E)
+<plist version=""1.0"">
+    <dict>
+    <key>UIApplicationSceneManifest</key>
+     <dict>
+      <key>UIApplicationSupportsMultipleScenes</key>
+      <false/>
+      <key>UISceneConfigurations</key>
+      <dict>
+      <key>UIWindowSceneSessionRoleApplication</key>
+        <array>
+          <dict>
+            <key>UISceneClassName</key>
+            <string>UIWindowScene</string>
+            <key>UISceneDelegateClassName</key>
+            <string>FlutterSceneDelegate</string>
+            <key>UISceneConfigurationName</key>
+            <string>flutter</string>
+            <key>UISceneStoryboardFile</key>
+            <string>Main</string>
+          </dict>
+        </array>
+       </dict>
+     </dict>
+       <key>CFBundleDevelopmentRegion</key>
+       <string>$(DEVELOPMENT_LANGUAGE)</string>
+       <key>CFBundleDisplayName</key>
+       <string>Bongo Payments</string>
+       <key>CFBundleExecutable</key>
+       <string>$(EXECUTABLE_NAME)</string>
+       <key>CFBundleIdentifier</key>
+       <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+       <key>CFBundleInfoDictionaryVersion</key>
+       <string>6.0</string>
+       <key>CFBundleName</key>
+       <string>bongo_pay</string>
+       <key>CFBundlePackageType</key>
+       <string>APPL</string>
+       <key>CFBundleShortVersionString</key>
+       <string>$(FLUTTER_BUILD_NAME)</string>
+       <key>CFBundleSignature</key>
+       <string>????</string>
+       <key>UIBackgroundModes</key>
+       <array>
+          <string>remote-notification</string>
+       </array>
+       <key>FirebaseAppDelegateProxyEnabled</key>
+       <false/>
+       <key>NSAppTransportSecurity</key>
+       <dict>
+          <key>NSAllowsArbitraryLoads</key>
+          <true/>
+       </dict>
+       <key>CFBundleVersion</key>
+       <string>$(FLUTTER_BUILD_NUMBER)</string>
+       <key>NSLocationWhenInUseUsageDescription</key>
+       <string>We need your location to provide better service.</string>
+       <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+       <string>This app uses notifications</string>
+       <key>NSLocationAlwaysUsageDescription</key>
+       <string>We need your location even when the app is in the background.</string>
+       <key>NSUserTrackingUsageDescription</key>
+       <string>This app uses notifications</string>
+       <key>LSRequiresIPhoneOS</key>
+       <true/>
+       <key>UILaunchStoryboardName</key>
+       <string>LaunchScreen</string>
+       <key>UIMainStoryboardFile</key>
+       <string>Main</string>
+       <key>NSFaceIDUsageDescription</key>
+       <string>This app requires Face ID authentication to secure your personal data and ensure only you can access your account.</string>
+       <key>NSCameraUsageDescription</key>
+       <string>We need access to your camera to take photos.</string>
+       <key>NSPhotoLibraryUsageDescription</key>
+       <string>We need access to your photo library to upload images.</string>
+       <key>NSAppleMusicUsageDescription</key>
+        <string>This app does not use Apple Music but requires limited media library access for system features.</string>
+       <key>UISupportedInterfaceOrientations</key>
+       <array>
+          <string>UIInterfaceOrientationPortrait</string>
+          <string>UIInterfaceOrientationLandscapeLeft</string>
+          <string>UIInterfaceOrientationLandscapeRight</string>
+       </array>
+       <key>UISupportedInterfaceOrientations~ipad</key>
+       <array>
+          <string>UIInterfaceOrientationPortrait</string>
+          <string>UIInterfaceOrientationPortraitUpsideDown</string>
+          <string>UIInterfaceOrientationLandscapeLeft</string>
+          <string>UIInterfaceOrientationLandscapeRight</string>
+       </array>
+       <key>CADisableMinimumFrameDurationOnPhone</key>
+       <true/>
+       <key>UIApplicationSupportsIndirectInputEvents</key>
+       <true/>
+       <key>io.flutter.embedded_views_preview</key>
+       <true/>
+       <key>NSMicrophoneUsageDescription</key>
+       <string>We need access to your microphone for video or audio capture in web pages.</string>
+       <key>NSPhotoLibraryAddUsageDescription</key>
+       <string>We need access to save images to your photo library.</string>
+       <key>UIFileSharingEnabled</key>
+       <true/>
+       <key>LSSupportsOpeningDocumentsInPlace</key>
+       <true/>
+       <key>UIStatusBarHidden</key>
+       <false/>
+    </dict>
+</plist>
+```",open,"['platform-ios', 'p: firebase_messaging', 'package', 'a: plugins', 'fyi-ecosystem', 'team-ios']",kekene48,6,2026-04-14 19:33:29+00:00,,UNKNOWN,8165,False,True,UI,65,,False
